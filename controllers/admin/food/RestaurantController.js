@@ -59,7 +59,7 @@ const deleteRestaurant = async (req, res) => {
 		const id = req.params.id
 		const deletedRestaurant = await Restaurant.findByIdAndDelete(id)
 		// console.log("Deleted restaurant:", deletedRestaurant)
-		res.json(deleteRestaurant)
+		res.json(deletedRestaurant)
 	} catch (error) {
 		console.error("Error deleting restaurant:", error)
 	}
