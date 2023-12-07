@@ -11,7 +11,7 @@ const {
 router.post("/dish/insert", createDish)
 
 // Read all dishs
-router.get("/dish/all", getAllDishes)
+router.get("/dish", getAllDishes)
 
 // Update a dish by ID
 router.put("/dish/update/:id", updateDish)

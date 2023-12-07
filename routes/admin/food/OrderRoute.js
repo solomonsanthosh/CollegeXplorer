@@ -11,7 +11,7 @@ const {
 router.post("/order/insert", createOrder)
 
 // Read all orders
-router.get("/order/all", getAllOrders)
+router.get("/order", getAllOrders)
 
 // Update a order by ID
 router.put("/order/update/:id", updateOrder)

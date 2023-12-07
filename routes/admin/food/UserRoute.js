@@ -12,7 +12,7 @@ const {
 router.post("/user/insert", createUser)
 
 // Read all users
-router.get("/user/all", getAllUsers)
+router.get("/user", getAllUsers)
 
 // Read single users
 router.get("/user/:id", getUserById)

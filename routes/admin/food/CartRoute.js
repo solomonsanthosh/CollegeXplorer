@@ -11,7 +11,7 @@ const {
 router.post("/cart/insert", createCart)
 
 // Read all carts
-router.get("/cart/all", getAllCarts)
+router.get("/cart", getAllCarts)
 
 // Update a cart by ID
 router.put("/cart/update/:id", updateCart)

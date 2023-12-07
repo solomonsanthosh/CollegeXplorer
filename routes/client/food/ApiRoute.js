@@ -6,9 +6,9 @@ const {
 const router = require("express").Router()
 
 // Read all restaurants
-router.get("/restaurant/all", getAllRestaurants)
+router.get("/restaurant", getAllRestaurants)
 
 // Read all dishes
-router.get("/dish/all", getAllDishes)
+router.get("/dish", getAllDishes)
 
 module.exports = router

@@ -11,7 +11,7 @@ const {
 router.post("/restaurant/insert", createRestaurant)
 
 // Read all restaurants
-router.get("/restaurant/all", getAllRestaurants)
+router.get("/restaurant", getAllRestaurants)
 
 // Update a restaurant by ID
 router.put("/restaurant/update/:id", updateRestaurant)
