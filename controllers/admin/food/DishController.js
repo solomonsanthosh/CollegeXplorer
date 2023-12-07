@@ -1,4 +1,4 @@
-const Dish = require("../../../modals/dish") // Replace with the actual path to your model file
+const Dish = require("../../../modals/dish") 
 
 // Create a new dish
 const createDish = async (req, res) => {
@@ -21,7 +21,7 @@ const createDish = async (req, res) => {
 		})
 
 		const savedDish = await newDish.save()
-		console.log("Dish created:", savedDish)
+		// console.log("Dish created:", savedDish)
 		res.json(savedDish)
 	} catch (error) {
 		console.error("Error creating dish:", error)
@@ -32,7 +32,7 @@ const createDish = async (req, res) => {
 const getAllDishes = async (req, res) => {
 	try {
 		const dishes = await Dish.find().populate("restaurant")
-		console.log("All dishes:", dishes)
+		// console.log("All dishes:", dishes)
 		res.json(dishes)
 	} catch (error) {
 		console.error("Error retrieving dishes:", error)
@@ -64,7 +64,7 @@ const updateDish = async (req, res) => {
 			{ new: true }
 		)
 
-		console.log("Updated dish:", updatedDish)
+		// console.log("Updated dish:", updatedDish)
 		res.json(updatedDish)
 	} catch (error) {
 		console.error("Error updating dish:", error)
@@ -76,7 +76,7 @@ const deleteDish = async (req, res) => {
 	try {
 		const id = req.params.id
 		const deletedDish = await Dish.findByIdAndDelete(id)
-		console.log("Deleted dish:", deletedDish)
+		// console.log("Deleted dish:", deletedDish)
 		res.json(deletedDish)
 	} catch (error) {
 		console.error("Error deleting dish:", error)

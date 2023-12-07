@@ -11,7 +11,7 @@ const createUser = async (req, res) => {
 		})
 
 		const savedUser = await newUser.save()
-		console.log("User created:", savedUser)
+		// console.log("User created:", savedUser)
 		res.json(savedUser)
 	} catch (error) {
 		console.error("Error creating user:", error)
@@ -23,7 +23,7 @@ const createUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
 	try {
 		const users = await User.find().populate("orders")
-		console.log("All users:", users)
+		// console.log("All users:", users)
 		res.json(users)
 	} catch (error) {
 		console.error("Error retrieving users:", error)
@@ -36,7 +36,7 @@ const getUserById = async (req, res) => {
 	try {
 		const id = req.params.id
 		const user = await User.findById(id).populate("orders")
-		console.log("User by ID:", user)
+		// console.log("User by ID:", user)
 		res.json(user)
 	} catch (error) {
 		console.error("Error retrieving user by ID:", error)
@@ -60,7 +60,7 @@ const updateUser = async (req, res) => {
 				new: true,
 			}
 		)
-		console.log("Updated user:", updatedUser)
+		// console.log("Updated user:", updatedUser)
 		res.json(updatedUser)
 	} catch (error) {
 		console.error("Error updating user:", error)
@@ -73,7 +73,7 @@ const deleteUser = async (req, res) => {
 	try {
 		const id = req.params.id
 		const deletedUser = await User.findByIdAndDelete(id)
-		console.log("Deleted user:", deletedUser)
+		// console.log("Deleted user:", deletedUser)
 		res.json(deletedUser)
 	} catch (error) {
 		console.error("Error deleting user:", error)

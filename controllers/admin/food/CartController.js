@@ -13,7 +13,7 @@ const createCart = async (req, res) => {
 		})
 
 		const savedCart = await newCart.save()
-		console.log("Cart created:", savedCart)
+		// console.log("Cart created:", savedCart)
 		res.json(savedCart)
 	} catch (error) {
 		console.error("Error creating cart:", error)
@@ -25,7 +25,7 @@ const createCart = async (req, res) => {
 const getAllCarts = async (req, res) => {
 	try {
 		const carts = await Cart.find().populate("user").populate("items.dish")
-		console.log("All carts:", carts)
+		// console.log("All carts:", carts)
 		res.json(carts)
 	} catch (error) {
 		console.error("Error retrieving carts:", error)
@@ -49,7 +49,7 @@ const updateCart = async (req, res) => {
 			{ new: true }
 		)
 
-		console.log("Updated cart:", updatedCart)
+		// console.log("Updated cart:", updatedCart)
 		res.json(updatedCart)
 	} catch (error) {
 		console.error("Error updating cart:", error)
@@ -62,7 +62,7 @@ const deleteCart = async (req, res) => {
 	try {
 		const id = req.params.id
 		const deletedCart = await Cart.findByIdAndDelete(id)
-		console.log("Deleted cart:", deletedCart)
+		// console.log("Deleted cart:", deletedCart)
 		res.json(deletedCart)
 	} catch (error) {
 		console.error("Error deleting cart:", error)

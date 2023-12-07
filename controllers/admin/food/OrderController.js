@@ -13,7 +13,7 @@ const createOrder = async (req, res) => {
 		})
 
 		const savedOrder = await newOrder.save()
-		console.log("Order created:", savedOrder)
+		// console.log("Order created:", savedOrder)
 		res.json(savedOrder)
 	} catch (error) {
 		console.error("Error creating order:", error)
@@ -27,7 +27,7 @@ const getAllOrders = async (req, res) => {
 		const orders = await Order.find()
 			.populate("user")
 			.populate("items.dish")
-		console.log("All orders:", orders)
+		// console.log("All orders:", orders)
 		res.json(orders)
 	} catch (error) {
 		console.error("Error retrieving orders:", error)
@@ -51,7 +51,7 @@ const updateOrder = async (req, res) => {
 			{ new: true }
 		)
 
-		console.log("Updated order:", updatedOrder)
+		// console.log("Updated order:", updatedOrder)
 		res.json(updatedOrder)
 	} catch (error) {
 		console.error("Error updating order:", error)
@@ -63,7 +63,7 @@ const deleteOrder = async (req, res) => {
 	try {
 		const id = req.params.id
 		const deletedOrder = await Order.findByIdAndDelete(id)
-		console.log("Deleted order:", deletedOrder)
+		// console.log("Deleted order:", deletedOrder)
 		res.json(deletedOrder)
 	} catch (error) {
 		console.error("Error deleting order:", error)

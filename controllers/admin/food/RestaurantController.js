@@ -12,7 +12,7 @@ const createRestaurant = async (req, res) => {
 			isOpened: isOpened,
 		})
 		const savedRestaurant = await newRestaurant.save()
-		console.log("Restaurant created:", savedRestaurant)
+		// console.log("Restaurant created:", savedRestaurant)
 		res.json(savedRestaurant)
 	} catch (error) {
 		console.error("Error creating restaurant:", error)
@@ -23,7 +23,7 @@ const createRestaurant = async (req, res) => {
 const getAllRestaurants = async (req, res) => {
 	try {
 		const restaurants = await Restaurant.find().populate("dishes")
-		console.log("All restaurants:", restaurants)
+		// console.log("All restaurants:", restaurants)
 		res.json(restaurants)
 	} catch (error) {
 		console.error("Error retrieving restaurants:", error)
@@ -46,7 +46,7 @@ const updateRestaurant = async (req, res) => {
 			},
 			{ new: true }
 		)
-		console.log("Updated restaurant:", updatedRestaurant)
+		// console.log("Updated restaurant:", updatedRestaurant)
 		res.json(updatedRestaurant)
 	} catch (error) {
 		console.error("Error updating restaurant:", error)
@@ -58,7 +58,7 @@ const deleteRestaurant = async (req, res) => {
 	try {
 		const id = req.params.id
 		const deletedRestaurant = await Restaurant.findByIdAndDelete(id)
-		console.log("Deleted restaurant:", deletedRestaurant)
+		// console.log("Deleted restaurant:", deletedRestaurant)
 		res.json(deleteRestaurant)
 	} catch (error) {
 		console.error("Error deleting restaurant:", error)
