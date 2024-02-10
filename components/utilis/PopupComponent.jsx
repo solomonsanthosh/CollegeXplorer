@@ -1,10 +1,15 @@
 import React, {useState} from 'react';
-import {View, Text, Modal, TouchableOpacity, StyleSheet, Image} from 'react-native';
-
+import {
+  View,
+  Text,
+  Modal,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+} from 'react-native';
 
 export const Popup = ({visible, onClose, food}) => {
-
-console.log("Image URL:", food?.dishImage);
+  console.log('Image URL:', food?.dishImage);
 
   return (
     <Modal
@@ -54,11 +59,11 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   cardImage: {
-    width: "100%",
-    height: "50%",
+    width: '100%',
+    height: '50%',
     borderRadius: 10,
     marginRight: 16,
-    margin : 10
+    margin: 10,
   },
   cardContent: {
     flex: 1,
@@ -104,14 +109,15 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop : 30
+    paddingTop: 30,
   },
   popupContent: {
     fontSize: 18,
+    color: '#000',
   },
   closeButton: {
-    position : "absolute",
-    right : 10,
+    position: 'absolute',
+    right: 10,
     width: 30,
     height: 30,
     backgroundColor: 'blue',

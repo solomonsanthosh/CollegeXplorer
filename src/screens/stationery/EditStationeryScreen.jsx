@@ -21,8 +21,8 @@ const validationSchema = yup.object().shape({
   dishPrice: yup.number().required('Product Price is required'),
 });
 
-export const EditFoodScreen = ({route}) => {
-  const foodData = route.params?.food;
+export const EditStationeryScreen = ({route}) => {
+  const productData = route.params?.product;
 
   const navigation = useNavigation();
 
@@ -36,11 +36,11 @@ export const EditFoodScreen = ({route}) => {
     try {
       await axios
         .put(
-          `http://192.168.98.28:8080/api/admin/dish/update/${foodData._id}`,
+          `http://192.168.98.28:8080/api/admin/dish/update/${productData._id}`,
           values,
         )
         .then(res => {
-          navigation.navigate('ShowFoodScreen');
+          navigation.navigate('ShowStationeryScreen');
           console.log(res);
           console.log(res.data);
         });
@@ -55,11 +55,11 @@ export const EditFoodScreen = ({route}) => {
     <ScrollView style={styles.container}>
       <Formik
         initialValues={{
-          dishName: foodData?.dishName,
-          dishDescription: foodData?.dishDescription,
-          restaurant: foodData?.restaurant._id,
-          dishImage: foodData?.dishImage,
-          dishPrice: foodData?.dishPrice || 0,
+          dishName: productData?.dishName,
+          dishDescription: productData?.dishDescription,
+          restaurant: productData?.restaurant._id,
+          dishImage: productData?.dishImage,
+          dishPrice: productData?.dishPrice || 0,
           isDishAvailable: false,
         }}
         validationSchema={validationSchema}

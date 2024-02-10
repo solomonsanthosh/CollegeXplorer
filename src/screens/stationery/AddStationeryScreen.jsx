@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -11,8 +11,6 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios';
-import Picker from 'react-native-picker-select';
-import {useNavigation} from '@react-navigation/native';
 
 const validationSchema = yup.object().shape({
   dishName: yup.string().required('Product Name is required'),
@@ -21,26 +19,19 @@ const validationSchema = yup.object().shape({
   dishPrice: yup.number().required('Product Price is required'),
 });
 
-export const EditFoodScreen = ({route}) => {
-  const foodData = route.params?.food;
-
-  const navigation = useNavigation();
-
+export const AddStationeryScreen = () => {
   const restaurants = [
-    {key: 1, label: 'Restaurant A', value: 'restaurantA'},
-    {key: 2, label: 'Restaurant B', value: 'restaurantB'},
-    {key: 3, label: 'Restaurant C', value: 'restaurantC'},
+    {label: 'Restaurant A', value: 'restaurantA'},
+    {label: 'Restaurant B', value: 'restaurantB'},
+    {label: 'Restaurant C', value: 'restaurantC'},
   ];
 
   const handleAddProduct = async values => {
+    console.log(values, 'values');
     try {
       await axios
-        .put(
-          `http://192.168.98.28:8080/api/admin/dish/update/${foodData._id}`,
-          values,
-        )
+        .post(`http://192.168.98.28:8080/api/admin/dish/insert`, values)
         .then(res => {
-          navigation.navigate('ShowFoodScreen');
           console.log(res);
           console.log(res.data);
         });
@@ -49,17 +40,15 @@ export const EditFoodScreen = ({route}) => {
     }
   };
 
-  const [selectedValue, setSelectedValue] = useState(restaurants[0].value);
-
   return (
     <ScrollView style={styles.container}>
       <Formik
         initialValues={{
-          dishName: foodData?.dishName,
-          dishDescription: foodData?.dishDescription,
-          restaurant: foodData?.restaurant._id,
-          dishImage: foodData?.dishImage,
-          dishPrice: foodData?.dishPrice || 0,
+          dishName: '',
+          dishDescription: '',
+          restaurant: 'null',
+          dishImage: '',
+          dishPrice: '',
           isDishAvailable: false,
         }}
         validationSchema={validationSchema}
@@ -99,11 +88,11 @@ export const EditFoodScreen = ({route}) => {
               )}
             </View>
 
-            {/* <View>
+            <View>
               <Text style={styles.label}>Restaurant</Text>
               <DropDownPicker
                 items={restaurants}
-                
+                defaultValue={values.restaurant}
                 containerStyle={{height: 40, marginBottom: 16}}
                 style={styles.dropdown}
                 dropDownStyle={styles.dropdown}
@@ -112,29 +101,13 @@ export const EditFoodScreen = ({route}) => {
               {touched.restaurant && errors.restaurant && (
                 <Text style={styles.errorText}>{errors.restaurant}</Text>
               )}
-            </View> */}
-
-            {/* <View>
-              <Picker
-                selectedValue={selectedValue}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedValue(itemValue)
-                }>
-                {restaurants.map((restaurant, index) => (
-                  <Picker.Item
-                    key={restaurant.key}
-                    label={restaurant.label}
-                    value={restaurant.value}
-                  />
-                ))}
-              </Picker>
-            </View> */}
+            </View>
 
             <View>
               <Text style={styles.label}>Product Price</Text>
               <TextInput
                 style={styles.input}
-                value={values.dishPrice.toString()}
+                value={values.dishPrice}
                 onChangeText={handleChange('dishPrice')}
                 placeholder="Enter product price"
                 keyboardType="numeric"
@@ -158,7 +131,7 @@ export const EditFoodScreen = ({route}) => {
             </View>
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Edit Product</Text>
+              <Text style={styles.buttonText}>Add Product</Text>
             </TouchableOpacity>
           </View>
         )}

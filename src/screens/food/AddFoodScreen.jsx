@@ -30,7 +30,7 @@ export const AddFoodScreen = () => {
     console.log(values, 'values');
     try {
       await axios
-        .post(`http://192.168.1.18:8080/api/admin/dish/insert`, values)
+        .post(`http://192.168.98.28:8080/api/admin/dish/insert`, values)
         .then(res => {
           console.log(res);
           console.log(res.data);
@@ -176,5 +176,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-export default AddFoodScreen;

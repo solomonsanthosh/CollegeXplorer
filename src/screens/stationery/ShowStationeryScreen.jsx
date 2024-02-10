@@ -2,28 +2,27 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
   Alert,
 } from 'react-native';
 import {Popup} from '../../../components/utilis/PopupComponent';
-import {FoodCard} from '../../../components/showPage/FoodCard';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
+import { StationeryCard } from '../../../components/showPage/StationeryCard';
 
-export const ShowFoodScreen = () => {
+export const ShowStationeryScreen = () => {
   const navigation = useNavigation();
   const [popupVisible, setPopupVisible] = useState(false);
-  const [selectedFood, setSelectedFood] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const [foods, setFoods] = useState([]);
+  const [products, setProducts] = useState([]);
 
   const deleteButton = id => {
     Alert.alert(
       'Delete Food',
-      'Are you sure you want to delete this food?',
+      'Are you sure you want to delete this product?',
       [
         {
           text: 'Cancel',
@@ -44,11 +43,11 @@ export const ShowFoodScreen = () => {
       await axios.delete(
         `http://192.168.98.28:8080/api/admin/dish/delete/${id}`,
       );
-      const updatedFoods = foods.filter(food => food._id !== id);
-      setFoods(updatedFoods);
+      const updatedFoods = products.filter(product => product._id !== id);
+      setProducts(updatedFoods);
       console.log('Deleted successfully');
     } catch (error) {
-      console.error('Error deleting food:', error);
+      console.error('Error deleting product:', error);
     }
   };
 
@@ -58,8 +57,7 @@ export const ShowFoodScreen = () => {
         const response = await axios.get(
           'http://192.168.98.28:8080/api/admin/dish',
         );
-        setFoods(response.data);
-        console.log(response.data);
+        setProducts(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -67,8 +65,8 @@ export const ShowFoodScreen = () => {
     fetchData();
   }, []);
 
-  const handleOpenPopup = food => {
-    setSelectedFood(food);
+  const handleOpenPopup = product => {
+    setSelectedProduct(product);
     setPopupVisible(true);
   };
 
@@ -79,25 +77,25 @@ export const ShowFoodScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        {foods?.map(food => (
-          <FoodCard
-            key={food._id}
-            food={food}
-            handleOpenPopup={() => handleOpenPopup(food)}
+        {products?.map(product => (
+          <StationeryCard
+            key={product._id}
+            product={product}
+            handleOpenPopup={() => handleOpenPopup(product)}
             deleteButton={deleteButton}
           />
         ))}
       </ScrollView>
       <TouchableOpacity
         style={styles.floatingButton}
-        onPress={() => navigation.navigate('AddFoodScreen')}>
+        onPress={() => navigation.navigate('AddStationeryScreen')}>
         <Text style={styles.floatingButtonText}>+</Text>
       </TouchableOpacity>
 
       <Popup
         visible={popupVisible}
         onClose={handleClosePopup}
-        food={selectedFood}
+        product={selectedProduct}
       />
     </View>
   );

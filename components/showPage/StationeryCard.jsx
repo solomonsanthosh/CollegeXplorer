@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';
 
-export const FoodCard = ({food, handleOpenPopup, deleteButton}) => {
+export const StationeryCard = ({food, handleOpenPopup, deleteButton}) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#000',
+    color: 'black',
   },
   cardPrice: {
     fontSize: 14,

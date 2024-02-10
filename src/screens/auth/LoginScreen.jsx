@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import { Formik } from 'formik';
 import React, {useState} from 'react';
 import {
   View,
@@ -7,6 +8,12 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import * as yup from 'yup';
+
+const validationSchema = yup.object().shape({
+  emailLogin: yup.string().required('Email is required'),
+  passwordLogin: yup.string().required('Password is required'),
+});
 
 export const LoginScreen = () => {
   const navigation = useNavigation();
@@ -26,32 +33,71 @@ export const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
-        <TouchableOpacity onPress={handleForgotPassword}>
-          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
-          <Text style={styles.registerLinkText}>Create an account</Text>
-        </TouchableOpacity>
-      </View>
+      <Formik
+        initialValues={{
+          emailLogin: '',
+          passwordLogin: '',
+        }}
+        validationSchema={validationSchema}
+        onSubmit={handleLogin}>
+        {({
+          handleChange,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+          setFieldValue,
+        }) => (
+          <View style={styles.formContainer}>
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: 'bold',
+                marginBottom: 16,
+                textAlign: 'center',
+              }}>
+              Login
+            </Text>
+
+            <View>
+              <Text style={styles.label}>Email</Text>
+              <TextInput
+                style={styles.input}
+                value={values.emailLogin}
+                onChangeText={handleChange('emailLogin')}
+                placeholder="Enter Email"
+              />
+              {touched.emailLogin && errors.emailLogin && (
+                <Text style={styles.errorText}>{errors.emailLogin}</Text>
+              )}
+            </View>
+
+            <View>
+              <Text style={styles.label}>Password</Text>
+              <TextInput
+                style={styles.input}
+                value={values.passwordLogin}
+                onChangeText={handleChange('passwordLogin')}
+                placeholder="Enter Password"
+              />
+              {touched.passwordLogin && errors.passwordLogin && (
+                <Text style={styles.errorText}>{errors.passwordLogin}</Text>
+              )}
+            </View>
+
+            <TouchableOpacity onPress={handleForgotPassword}>
+              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+              <Text style={styles.loginButtonText}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('RegisterScreen')}>
+              <Text style={styles.registerLinkText}>Create an account</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </Formik>
     </View>
   );
 };
