@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import { Formik } from 'formik';
+import {Formik} from 'formik';
 import React, {useState} from 'react';
 import {
   View,
@@ -14,28 +14,29 @@ const validationSchema = yup.object().shape({
   nameRegister: yup.string().required('Name is required'),
   emailRegister: yup.string().required('Email is required'),
   passwordRegister: yup.string().required('Password is required'),
-  confirmPasswordRegister: yup.string().required('Confirm Password is required'),
+  confirmPasswordRegister: yup
+    .string()
+    .required('Confirm Password is required'),
 });
 
 export const RegisterScreen = () => {
   const navigation = useNavigation();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleRegister = () => {
-    // Implement your Register logic here
-    console.log('Register pressed with email:', email, 'and password:', password);
+  const handleRegister = values => {
+    console.log(
+      `Register pressed with email: ${values.emailRegister} and password: ${values.passwordRegister}`,
+    );
+    console.log(JSON.stringify(values));
   };
 
   return (
     <View style={styles.container}>
       <Formik
         initialValues={{
-          nameRegister : '',
+          nameRegister: '',
           emailRegister: '',
           passwordRegister: '',
-          confirmPasswordRegister : '',
+          confirmPasswordRegister: '',
         }}
         validationSchema={validationSchema}
         onSubmit={handleRegister}>
@@ -57,7 +58,7 @@ export const RegisterScreen = () => {
               }}>
               Register
             </Text>
-            
+
             <View>
               <Text style={styles.label}>Email</Text>
               <TextInput
@@ -70,7 +71,7 @@ export const RegisterScreen = () => {
                 <Text style={styles.errorText}>{errors.emailRegister}</Text>
               )}
             </View>
-            
+
             <View>
               <Text style={styles.label}>Name</Text>
               <TextInput
@@ -83,7 +84,7 @@ export const RegisterScreen = () => {
                 <Text style={styles.errorText}>{errors.nameRegister}</Text>
               )}
             </View>
-            
+
             <View>
               <Text style={styles.label}>Password</Text>
               <TextInput
@@ -96,7 +97,7 @@ export const RegisterScreen = () => {
                 <Text style={styles.errorText}>{errors.passwordRegister}</Text>
               )}
             </View>
-            
+
             <View>
               <Text style={styles.label}>Confirm Password</Text>
               <TextInput
@@ -105,9 +106,12 @@ export const RegisterScreen = () => {
                 onChangeText={handleChange('confirmPasswordRegister')}
                 placeholder="Enter Confirm Password"
               />
-              {touched.confirmPasswordRegister && errors.confirmPasswordRegister && (
-                <Text style={styles.errorText}>{errors.confirmPasswordRegister}</Text>
-              )}
+              {touched.confirmPasswordRegister &&
+                errors.confirmPasswordRegister && (
+                  <Text style={styles.errorText}>
+                    {errors.confirmPasswordRegister}
+                  </Text>
+                )}
             </View>
 
             <TouchableOpacity

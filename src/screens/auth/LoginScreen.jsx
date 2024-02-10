@@ -18,18 +18,17 @@ const validationSchema = yup.object().shape({
 export const LoginScreen = () => {
   const navigation = useNavigation();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleLogin = () => {
-    // Implement your login logic here
-    console.log('Login pressed with email:', email, 'and password:', password);
+  const handleLogin = (values) => {
+    console.log(
+      `Login pressed with email: ${values.emailLogin} and password: ${values.passwordLogin}`,
+    );
+    console.log(JSON.stringify(values));
   };
 
-  const handleForgotPassword = () => {
-    // Implement your forgot password logic here
-    console.log('Forgot Password pressed');
-  };
+  // const handleForgotPassword = () => {
+  //   // Implement your forgot password logic here
+  //   console.log('Forgot Password pressed');
+  // };
 
   return (
     <View style={styles.container}>
@@ -85,9 +84,9 @@ export const LoginScreen = () => {
               )}
             </View>
 
-            <TouchableOpacity onPress={handleForgotPassword}>
+            {/* <TouchableOpacity onPress={handleForgotPassword}>
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
               <Text style={styles.loginButtonText}>Login</Text>
             </TouchableOpacity>
