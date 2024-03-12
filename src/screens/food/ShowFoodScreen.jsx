@@ -7,25 +7,25 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import {Popup} from '../../../components/utilis/PopupComponent';
-import {FoodCard} from '../../../components/showPage/FoodCard';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import {FoodCard} from '../../../components/showPage/FoodCard';
+import {Popup} from '../../../components/utilis/PopupComponent';
+import {useSelector} from 'react-redux';
 
 export const ShowFoodScreen = () => {
   const navigation = useNavigation();
   const [popupVisible, setPopupVisible] = useState(false);
-  const [selectedFood, setSelectedFood] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const [foods, setFoods] = useState([]);
-
+  const [products, setProducts] = useState([]);
   const user = useSelector(state => state.user);
+  const [loading, setLoading] = useState(true);
 
   const deleteButton = id => {
     Alert.alert(
       'Delete Food',
-      'Are you sure you want to delete this food?',
+      'Are you sure you want to delete this product?',
       [
         {
           text: 'Cancel',
@@ -43,33 +43,39 @@ export const ShowFoodScreen = () => {
 
   const deleteFood = async id => {
     try {
-      await axios.delete(
-        `http://192.168.1.8:8080/api/admin/product/delete/${id}`,
-      );
-      const updatedFoods = foods.filter(food => food._id !== id);
-      setFoods(updatedFoods);
-      console.log('Deleted successfully');
+      await axios.delete(`http://192.168.1.8:8080/api/product/delete/${id}`);
+      const updatedFoods = products.filter(product => product?._id !== id);
+      setProducts(updatedFoods);
     } catch (error) {
-      console.error('Error deleting food:', error);
+      console.error('Error deleting product:', error);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `http://192.168.1.8:8080/api/product/shop/${user?._id}`,
+      );
+      setProducts(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `http://192.168.1.8:8080/api/admin/product/shop/${user._id}`,
-        );
-        setFoods(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchData();
-  }, []);
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
 
-  const handleOpenPopup = food => {
-    setSelectedFood(food);
+  useEffect(() => {
+    if (products.length > 0) {
+      setLoading(false);
+    }
+  }, [products]);
+
+  const handleOpenPopup = product => {
+    setSelectedProduct(product);
     setPopupVisible(true);
   };
 
@@ -80,15 +86,21 @@ export const ShowFoodScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <Text>{JSON.stringify(user)}</Text>
-        {foods?.reverse().map(product => (
-          <FoodCard
-            key={product._id}
-            product={product}
-            handleOpenPopup={() => handleOpenPopup(product)}
-            deleteButton={deleteButton}
-          />
-        ))}
+        {loading ? (
+          <Text>Loading...</Text>
+        ) : (
+          <>
+            {products?.length === 0 && <Text>No products found</Text>}
+            {products?.reverse().map(product => (
+              <FoodCard
+                key={product._id}
+                product={product}
+                handleOpenPopup={() => handleOpenPopup(product)}
+                deleteButton={deleteButton}
+              />
+            ))}
+          </>
+        )}
       </ScrollView>
       <TouchableOpacity
         style={styles.floatingButton}
@@ -99,7 +111,7 @@ export const ShowFoodScreen = () => {
       <Popup
         visible={popupVisible}
         onClose={handleClosePopup}
-        food={selectedFood}
+        product={selectedProduct}
       />
     </View>
   );

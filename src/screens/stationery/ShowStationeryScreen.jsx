@@ -7,7 +7,6 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import {Popup} from '../../../components/utilis/PopupComponent';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {StationeryCard} from '../../../components/showPage/StationeryCard';
@@ -44,12 +43,9 @@ export const ShowStationeryScreen = () => {
 
   const deleteFood = async id => {
     try {
-      await axios.delete(
-        `http://192.168.1.8:8080/api/admin/product/delete/${id}`,
-      );
+      await axios.delete(`http://192.168.1.8:8080/api/product/delete/${id}`);
       const updatedFoods = products.filter(product => product?._id !== id);
       setProducts(updatedFoods);
-      console.log('Deleted successfully');
     } catch (error) {
       console.error('Error deleting product:', error);
     }
@@ -57,9 +53,8 @@ export const ShowStationeryScreen = () => {
 
   const fetchData = async () => {
     try {
-      console.log(user && user?._id, 'user._id');
       const response = await axios.get(
-        `http://192.168.1.8:8080/api/admin/product/shop/${user?._id}`,
+        `http://192.168.1.8:8080/api/product/shop/${user?._id}`,
       );
       setProducts(response.data);
     } catch (error) {
@@ -68,8 +63,10 @@ export const ShowStationeryScreen = () => {
   };
 
   useEffect(() => {
+    if (user) {
       fetchData();
-  }, []);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (products.length > 0) {

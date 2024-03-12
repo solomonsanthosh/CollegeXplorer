@@ -6,20 +6,20 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {Formik} from 'formik';
 import * as yup from 'yup';
-import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 const validationSchema = yup.object().shape({
   productName: yup.string().required('Product Name is required'),
   productDescription: yup.string().required('Product Description is required'),
   shop: yup.string().required('Shop is required'),
   productImage: yup.string().required('Product Image is required'),
-  productType : yup.string().required('Product Type is required'),
+  productType: yup.string().required('Product Type is required'),
   productPrice: yup.string().required('Product Price is required'),
 });
 
@@ -35,15 +35,18 @@ export const AddStationeryScreen = () => {
   const navigation = useNavigation();
 
   const handleAddProduct = async values => {
-    console.log(values, 'values');
     try {
       await axios
-        .post(`http://192.168.1.8:8080/api/admin/product/insert`, values)
+        .post(`http://192.168.1.8:8080/api/product/insert`, values)
         .then(res => {
-          console.log(res);
-          console.log(res.data);
+          Alert.alert('Success', 'Product Added Successfully', [
+            {
+              text: 'OK',
+              onPress: () => navigation.navigate('ShowStationeryScreen'), // Navigate after pressing "OK"
+            },
+          ]);
         });
-      navigation.navigate('ShowStationeryScreen');
+      // navigation.navigate('ShowStationeryScreen');
     } catch (error) {
       console.log('Error Occured ', error);
     }
@@ -51,15 +54,18 @@ export const AddStationeryScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
+      <Text style={[styles.inputLabel, {textAlign: 'center'}]}>
+        Add Stationery Product
+      </Text>
       <Formik
         initialValues={{
           productName: '',
           productDescription: '',
-          shop: user.name,
+          shop: user._id,
           productImage: '',
-          productType : '',
+          productType: 'stationery',
           productPrice: '',
-          isProductAvailable: false,
+          isProductAvailable: true,
         }}
         validationSchema={validationSchema}
         onSubmit={handleAddProduct}>
@@ -94,7 +100,6 @@ export const AddStationeryScreen = () => {
                 placeholderTextColor="#6b7280"
                 style={styles.inputControl}
                 value={values.productDescription}
-                
               />
               {touched.productDescription && errors.productDescription && (
                 <Text style={styles.errorText}>
@@ -103,7 +108,7 @@ export const AddStationeryScreen = () => {
               )}
             </View>
 
-            <View style={styles.input}>
+            {/* <View style={styles.input}>
               <Text style={styles.inputLabel}>Shop</Text>
               <TextInput
                 onChangeText={handleChange('shop')}
@@ -117,7 +122,7 @@ export const AddStationeryScreen = () => {
               {touched.shop && errors.shop && (
                 <Text style={styles.errorText}>{errors.shop}</Text>
               )}
-            </View>
+            </View> */}
 
             <View style={styles.input}>
               <Text style={styles.inputLabel}>Product Price</Text>

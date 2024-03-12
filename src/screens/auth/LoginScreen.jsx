@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {Formik} from 'formik';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -37,12 +37,8 @@ export const LoginScreen = () => {
         alert('Password is required');
         return;
       }
-      console.log(
-        `Login pressed with email: ${values.emailLogin} and password: ${values.passwordLogin}`,
-      );
-      console.log('values', values);
       await axios
-        .post(`http://192.168.1.8:8080/api/admin/adminuser/login`, {
+        .post(`http://192.168.1.8:8080/api/adminuser/login`, {
           emailLogin: values.emailLogin,
           passwordLogin: values.passwordLogin,
         })
@@ -51,14 +47,22 @@ export const LoginScreen = () => {
           if (response.data.shopType == 'food') {
             navigation.navigate('ShowFoodScreen');
           } else if (response.data.shopType == 'stationery') {
-            navigation.navigate('WaitFoodScreen');
+            navigation.navigate('ShowStationeryScreen');
           }
           dispatch(loginRedux(response.data));
         });
-    } catch(e) {
+    } catch (e) {
       console.log('Error', e);
     }
   };
+
+  useEffect(() => {
+    if (user && user.shopType === 'food') {
+      navigation.navigate('ShowFoodScreen');
+    } else if (user && user.shopType === 'stationery') {
+      navigation.navigate('ShowStationeryScreen');
+    }
+  }, [user]);
 
   return (
     <>

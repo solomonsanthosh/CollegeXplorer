@@ -15,6 +15,7 @@ import {EditStationeryScreen} from './screens/stationery/EditStationeryScreen';
 import {WaitFoodScreen} from './screens/food/WaitFoodScreen';
 import {MapScreen} from './screens/map/MapScreen';
 import {useSelector} from 'react-redux';
+import AdminDashboard from './screens/superAdmin/AdminDashboard';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,9 @@ export default function Navigation() {
         <Stack.Screen name="EditFoodScreen" component={EditFoodScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+
+        {/* AdminDashboard */}
+        <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
 
         {/* Food Wait Screen */}
         <Stack.Screen name="WaitFoodScreen" component={WaitFoodScreen} />

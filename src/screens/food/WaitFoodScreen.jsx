@@ -5,16 +5,17 @@ import {FoodWaitCard} from '../../../components/waitCard/FoodWaitCard';
 import { useSelector } from 'react-redux';
 
 export const WaitFoodScreen = () => {
+  const user = useSelector(state => state.user);
   const [allOrders, setAllOrders] = useState([]);
 
-  const user = useSelector(state => state.user);
-
   useEffect(() => {
-    axios.get(`http://192.168.1.8:8080/api/admin/order/${user?._id}`).then(res => {
-      setAllOrders(res.data);
-      console.log(res.data);
-    });
-  }, []);
+    if(user) {
+      axios.get(`http://192.168.1.8:8080/api/order/${user?._id}`).then(res => {
+        setAllOrders(res.data);
+      });
+    }
+  }, [user]);
+
 
   return (
     <View style={styles.cardContainer}>

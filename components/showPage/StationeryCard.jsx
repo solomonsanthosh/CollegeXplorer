@@ -29,7 +29,7 @@ export const StationeryCard = ({product, handleOpenPopup, deleteButton}) => {
             <TouchableOpacity
               style={styles.icon}
               onPress={() =>
-                navigation.navigate('EditStationeryScreen', {product: product})
+                navigation.navigate('EditStationeryScreen', {productDetails: product})
               }>
               <Text style={styles.iconText}>Update</Text>
             </TouchableOpacity>

@@ -3,10 +3,10 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 
-export const FoodWaitCard = ({order}) => {
+export const StationeryWaitCard = ({order}) => {
   const navigation = useNavigation();
 
-  const acceptDish = () => {
+  const acceptStationery = () => {
     axios
       .post(`http://192.168.1.8:8080/api/order/update/${order._id}`, {
         user: order.user._id,
@@ -18,7 +18,7 @@ export const FoodWaitCard = ({order}) => {
       });
   };
 
-  const declineDish = () => {
+  const declineStationery = () => {
     axios
       .post(`http://192.168.1.8:8080/api/order/update/${order._id}`, {
         user: order.user._id,
@@ -46,12 +46,12 @@ export const FoodWaitCard = ({order}) => {
           <View style={styles.iconContainer}>
             <TouchableOpacity
               style={[styles.icon, {backgroundColor: '#68BA6A'}]}
-              onPress={() => acceptDish()}>
+              onPress={() => acceptStationery()}>
               <Text style={[styles.iconText, {color: '#fff'}]}>Accept</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.icon, {backgroundColor: '#E74C3C'}]}
-              onPress={() => declineDish()}>
+              onPress={() => declineStationery()}>
               <Text style={[styles.iconText, {color: '#fff'}]}>Decline</Text>
             </TouchableOpacity>
           </View>

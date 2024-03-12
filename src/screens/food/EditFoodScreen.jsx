@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {Formik} from 'formik';
 import * as yup from 'yup';
-import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios';
-import Picker from 'react-native-picker-select';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 const validationSchema = yup.object().shape({
   productName: yup.string().required('Product Name is required'),
@@ -23,33 +23,27 @@ const validationSchema = yup.object().shape({
 
 export const EditFoodScreen = ({route}) => {
   const productData = route.params?.product;
-
   const navigation = useNavigation();
+  const user = useSelector(state => state.user);
 
-  const shops = [
-    {key: 1, label: 'Restaurant A', value: 'shopA'},
-    {key: 2, label: 'Restaurant B', value: 'shopB'},
-    {key: 3, label: 'Restaurant C', value: 'shopC'},
-  ];
-
-  const handleAddProduct = async values => {
+  const handleEditProduct = async values => {
+    console.log('Values', values);
+    console.log(productData._id);
     try {
       await axios
-        .put(
-          `http://192.168.1.8:8080/api/admin/product/update/${productData._id}`,
-          values,
-        )
+        .put(`http://192.168.1.8:8080/api/product/update/${productData._id}`, values)
         .then(res => {
-          navigation.navigate('ShowFoodScreen');
-          console.log(res);
-          console.log(res.data);
+          Alert.alert('Success', 'Product Updated Successfully', [
+            {
+              text: 'OK',
+              onPress: () => navigation.navigate('ShowFoodScreen'),
+            },
+          ]);
         });
     } catch (error) {
       console.log('Error Occured ', error);
     }
   };
-
-  const [selectedValue, setSelectedValue] = useState(shops[0].value);
 
   return (
     <ScrollView style={styles.container}>
@@ -57,13 +51,14 @@ export const EditFoodScreen = ({route}) => {
         initialValues={{
           productName: productData?.productName,
           productDescription: productData?.productDescription,
-          shop: productData?.shop._id,
+          shop: user._id,
           productImage: productData?.productImage,
-          productPrice: productData?.productPrice || 0,
-          isProductAvailable: false,
+          productType: 'food',
+          productPrice: productData?.productPrice,
+          isProductAvailable: productData?.isProductAvailable,
         }}
         validationSchema={validationSchema}
-        onSubmit={handleAddProduct}>
+        onSubmit={handleEditProduct}>
         {({
           handleChange,
           handleSubmit,
@@ -73,84 +68,61 @@ export const EditFoodScreen = ({route}) => {
           setFieldValue,
         }) => (
           <View>
-            <View>
-              <Text style={styles.label}>Dish Name</Text>
+            <Text style={[styles.inputLabel, {textAlign: 'center'}]}>
+              Edit Food Product
+            </Text>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Food Name</Text>
               <TextInput
-                style={styles.input}
-                value={values.productName}
                 onChangeText={handleChange('productName')}
-                placeholder="Enter dish name"
+                placeholder="Enter Dish name"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={values.productName}
               />
               {touched.productName && errors.productName && (
                 <Text style={styles.errorText}>{errors.productName}</Text>
               )}
             </View>
 
-            <View>
-              <Text style={styles.label}>Dish Description</Text>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Food Description</Text>
               <TextInput
-                style={styles.input}
-                value={values.productDescription}
                 onChangeText={handleChange('productDescription')}
-                placeholder="Enter dish description"
+                placeholder="Enter Dish description"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={values.productDescription}
               />
               {touched.productDescription && errors.productDescription && (
-                <Text style={styles.errorText}>{errors.productDescription}</Text>
+                <Text style={styles.errorText}>
+                  {errors.productDescription}
+                </Text>
               )}
             </View>
 
-            {/* <View>
-              <Text style={styles.label}>Restaurant</Text>
-              <DropDownPicker
-                items={shops}
-                
-                containerStyle={{height: 40, marginBottom: 16}}
-                style={styles.dropdown}
-                dropDownStyle={styles.dropdown}
-                onChangeItem={item => setFieldValue('shop', item.value)}
-              />
-              {touched.shop && errors.shop && (
-                <Text style={styles.errorText}>{errors.shop}</Text>
-              )}
-            </View> */}
-
-            {/* <View>
-              <Picker
-                selectedValue={selectedValue}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedValue(itemValue)
-                }>
-                {shops.map((shop, index) => (
-                  <Picker.Item
-                    key={shop.key}
-                    label={shop.label}
-                    value={shop.value}
-                  />
-                ))}
-              </Picker>
-            </View> */}
-
-            <View>
-              <Text style={styles.label}>Dish Price</Text>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Food Price</Text>
               <TextInput
-                style={styles.input}
-                value={values.productPrice.toString()}
                 onChangeText={handleChange('productPrice')}
-                placeholder="Enter dish price"
-                keyboardType="numeric"
+                placeholder="Enter Product Price"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={values.productPrice.toString()}
               />
               {touched.productPrice && errors.productPrice && (
                 <Text style={styles.errorText}>{errors.productPrice}</Text>
               )}
             </View>
 
-            <View>
-              <Text style={styles.label}>Dish Image</Text>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Food Image</Text>
               <TextInput
-                style={styles.input}
-                value={values.productImage}
                 onChangeText={handleChange('productImage')}
-                placeholder="Enter dish image"
+                placeholder="Enter Product Image"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={values.productImage}
               />
               {touched.productImage && errors.productImage && (
                 <Text style={styles.errorText}>{errors.productImage}</Text>
@@ -158,7 +130,7 @@ export const EditFoodScreen = ({route}) => {
             </View>
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Edit Product</Text>
+              <Text style={styles.buttonText}>Edit Food</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -173,17 +145,25 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
-  label: {
-    fontSize: 16,
+  input: {
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#222',
     marginBottom: 8,
   },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 16,
-    padding: 8,
+  inputControl: {
+    height: 44,
+    backgroundColor: '#f1f5f9',
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#222',
   },
+
   errorText: {
     color: 'red',
     fontSize: 14,
