@@ -36,7 +36,7 @@ export const EditFoodScreen = ({route}) => {
     try {
       await axios
         .put(
-          `http://192.168.237.28:8080/api/admin/product/update/${productData._id}`,
+          `http://192.168.1.8:8080/api/admin/product/update/${productData._id}`,
           values,
         )
         .then(res => {

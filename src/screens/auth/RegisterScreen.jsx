@@ -28,7 +28,7 @@ export const RegisterScreen = () => {
   const navigation = useNavigation();
 
   const handleRegister = values => {
-    axios.post(`http://192.168.237.28:8080/api/admin/adminuser/create`, values, () => {
+    axios.post(`http://192.168.1.8:8080/api/admin/adminuser/create`, values, () => {
       console.log(values, "values");
       alert('Admin User Created Successfully');
       navigation.navigate('LoginScreen');

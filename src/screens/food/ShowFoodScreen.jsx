@@ -44,7 +44,7 @@ export const ShowFoodScreen = () => {
   const deleteFood = async id => {
     try {
       await axios.delete(
-        `http://192.168.237.28:8080/api/admin/product/delete/${id}`,
+        `http://192.168.1.8:8080/api/admin/product/delete/${id}`,
       );
       const updatedFoods = foods.filter(food => food._id !== id);
       setFoods(updatedFoods);
@@ -58,7 +58,7 @@ export const ShowFoodScreen = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.237.28:8080/api/admin/product/shop/${user._id}`,
+          `http://192.168.1.8:8080/api/admin/product/shop/${user._id}`,
         );
         setFoods(response.data);
       } catch (error) {

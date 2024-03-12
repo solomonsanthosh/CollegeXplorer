@@ -22,7 +22,7 @@ export const FoodWaitCard = ({order}) => {
             order.items.map((item, index) => (
               <View key={index}>
                 <Text style={{color: '#000'}}>
-                  {item.dish.dishName} - {item.quantity}
+                  {item.product.productName} - {item.quantity}
                 </Text>
               </View>
             ))}

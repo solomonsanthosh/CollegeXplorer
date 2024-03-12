@@ -42,7 +42,7 @@ export const LoginScreen = () => {
       );
       console.log('values', values);
       await axios
-        .post(`http://192.168.237.28:8080/api/admin/adminuser/login`, {
+        .post(`http://192.168.1.8:8080/api/admin/adminuser/login`, {
           emailLogin: values.emailLogin,
           passwordLogin: values.passwordLogin,
         })
@@ -51,15 +51,13 @@ export const LoginScreen = () => {
           if (response.data.shopType == 'food') {
             navigation.navigate('ShowFoodScreen');
           } else if (response.data.shopType == 'stationery') {
-            navigation.navigate('ShowStationeryScreen');
+            navigation.navigate('WaitFoodScreen');
           }
           dispatch(loginRedux(response.data));
         });
     } catch(e) {
       console.log('Error', e);
     }
-
-    
   };
 
   return (

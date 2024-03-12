@@ -38,7 +38,7 @@ export const AddStationeryScreen = () => {
     console.log(values, 'values');
     try {
       await axios
-        .post(`http://192.168.237.28:8080/api/admin/product/insert`, values)
+        .post(`http://192.168.1.8:8080/api/admin/product/insert`, values)
         .then(res => {
           console.log(res);
           console.log(res.data);
