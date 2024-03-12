@@ -8,7 +8,7 @@ import {
   Image,
 } from 'react-native';
 
-export const Popup = ({visible, onClose, food}) => {
+export const PopupStationery = ({visible, onClose, product}) => {
 
   return (
     <Modal
@@ -19,10 +19,10 @@ export const Popup = ({visible, onClose, food}) => {
       <View style={styles.overlay}>
         <View style={styles.popup}>
           <View style={styles.popupHead}>
-            <Image source={{uri: food?.productImage}} style={styles.cardImage} />
-            <Text style={styles.popupContent}>{food?.productName}</Text>
-            <Text style={styles.popupContent}>${food?.productPrice}</Text>
-            <Text style={styles.popupContent}>{food?.productDescription}</Text>
+            <Image source={{uri: product?.productImage}} style={styles.cardImage} />
+            <Text style={styles.popupContent}>{product?.productName}</Text>
+            <Text style={styles.popupContent}>${product?.productPrice}</Text>
+            <Text style={styles.popupContent}>{product?.productDescription}</Text>
             <TouchableOpacity style={styles.closeButton} onPress={onClose}>
               <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>

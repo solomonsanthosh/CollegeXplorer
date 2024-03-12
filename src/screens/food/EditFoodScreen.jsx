@@ -15,28 +15,28 @@ import Picker from 'react-native-picker-select';
 import {useNavigation} from '@react-navigation/native';
 
 const validationSchema = yup.object().shape({
-  dishName: yup.string().required('Product Name is required'),
-  dishDescription: yup.string().required('Product Description is required'),
-  restaurant: yup.string().required('Restaurant is required'),
-  dishPrice: yup.number().required('Product Price is required'),
+  productName: yup.string().required('Product Name is required'),
+  productDescription: yup.string().required('Product Description is required'),
+  shop: yup.string().required('Restaurant is required'),
+  productPrice: yup.number().required('Product Price is required'),
 });
 
 export const EditFoodScreen = ({route}) => {
-  const foodData = route.params?.food;
+  const productData = route.params?.product;
 
   const navigation = useNavigation();
 
-  const restaurants = [
-    {key: 1, label: 'Restaurant A', value: 'restaurantA'},
-    {key: 2, label: 'Restaurant B', value: 'restaurantB'},
-    {key: 3, label: 'Restaurant C', value: 'restaurantC'},
+  const shops = [
+    {key: 1, label: 'Restaurant A', value: 'shopA'},
+    {key: 2, label: 'Restaurant B', value: 'shopB'},
+    {key: 3, label: 'Restaurant C', value: 'shopC'},
   ];
 
   const handleAddProduct = async values => {
     try {
       await axios
         .put(
-          `http://192.168.98.28:8080/api/admin/dish/update/${foodData._id}`,
+          `http://192.168.237.28:8080/api/admin/product/update/${productData._id}`,
           values,
         )
         .then(res => {
@@ -49,18 +49,18 @@ export const EditFoodScreen = ({route}) => {
     }
   };
 
-  const [selectedValue, setSelectedValue] = useState(restaurants[0].value);
+  const [selectedValue, setSelectedValue] = useState(shops[0].value);
 
   return (
     <ScrollView style={styles.container}>
       <Formik
         initialValues={{
-          dishName: foodData?.dishName,
-          dishDescription: foodData?.dishDescription,
-          restaurant: foodData?.restaurant._id,
-          dishImage: foodData?.dishImage,
-          dishPrice: foodData?.dishPrice || 0,
-          isDishAvailable: false,
+          productName: productData?.productName,
+          productDescription: productData?.productDescription,
+          shop: productData?.shop._id,
+          productImage: productData?.productImage,
+          productPrice: productData?.productPrice || 0,
+          isProductAvailable: false,
         }}
         validationSchema={validationSchema}
         onSubmit={handleAddProduct}>
@@ -74,43 +74,43 @@ export const EditFoodScreen = ({route}) => {
         }) => (
           <View>
             <View>
-              <Text style={styles.label}>Product Name</Text>
+              <Text style={styles.label}>Dish Name</Text>
               <TextInput
                 style={styles.input}
-                value={values.dishName}
-                onChangeText={handleChange('dishName')}
-                placeholder="Enter product name"
+                value={values.productName}
+                onChangeText={handleChange('productName')}
+                placeholder="Enter dish name"
               />
-              {touched.dishName && errors.dishName && (
-                <Text style={styles.errorText}>{errors.dishName}</Text>
+              {touched.productName && errors.productName && (
+                <Text style={styles.errorText}>{errors.productName}</Text>
               )}
             </View>
 
             <View>
-              <Text style={styles.label}>Product Description</Text>
+              <Text style={styles.label}>Dish Description</Text>
               <TextInput
                 style={styles.input}
-                value={values.dishDescription}
-                onChangeText={handleChange('dishDescription')}
-                placeholder="Enter product description"
+                value={values.productDescription}
+                onChangeText={handleChange('productDescription')}
+                placeholder="Enter dish description"
               />
-              {touched.dishDescription && errors.dishDescription && (
-                <Text style={styles.errorText}>{errors.dishDescription}</Text>
+              {touched.productDescription && errors.productDescription && (
+                <Text style={styles.errorText}>{errors.productDescription}</Text>
               )}
             </View>
 
             {/* <View>
               <Text style={styles.label}>Restaurant</Text>
               <DropDownPicker
-                items={restaurants}
+                items={shops}
                 
                 containerStyle={{height: 40, marginBottom: 16}}
                 style={styles.dropdown}
                 dropDownStyle={styles.dropdown}
-                onChangeItem={item => setFieldValue('restaurant', item.value)}
+                onChangeItem={item => setFieldValue('shop', item.value)}
               />
-              {touched.restaurant && errors.restaurant && (
-                <Text style={styles.errorText}>{errors.restaurant}</Text>
+              {touched.shop && errors.shop && (
+                <Text style={styles.errorText}>{errors.shop}</Text>
               )}
             </View> */}
 
@@ -120,40 +120,40 @@ export const EditFoodScreen = ({route}) => {
                 onValueChange={(itemValue, itemIndex) =>
                   setSelectedValue(itemValue)
                 }>
-                {restaurants.map((restaurant, index) => (
+                {shops.map((shop, index) => (
                   <Picker.Item
-                    key={restaurant.key}
-                    label={restaurant.label}
-                    value={restaurant.value}
+                    key={shop.key}
+                    label={shop.label}
+                    value={shop.value}
                   />
                 ))}
               </Picker>
             </View> */}
 
             <View>
-              <Text style={styles.label}>Product Price</Text>
+              <Text style={styles.label}>Dish Price</Text>
               <TextInput
                 style={styles.input}
-                value={values.dishPrice.toString()}
-                onChangeText={handleChange('dishPrice')}
-                placeholder="Enter product price"
+                value={values.productPrice.toString()}
+                onChangeText={handleChange('productPrice')}
+                placeholder="Enter dish price"
                 keyboardType="numeric"
               />
-              {touched.dishPrice && errors.dishPrice && (
-                <Text style={styles.errorText}>{errors.dishPrice}</Text>
+              {touched.productPrice && errors.productPrice && (
+                <Text style={styles.errorText}>{errors.productPrice}</Text>
               )}
             </View>
 
             <View>
-              <Text style={styles.label}>Product Image</Text>
+              <Text style={styles.label}>Dish Image</Text>
               <TextInput
                 style={styles.input}
-                value={values.dishImage}
-                onChangeText={handleChange('dishImage')}
-                placeholder="Enter product image"
+                value={values.productImage}
+                onChangeText={handleChange('productImage')}
+                placeholder="Enter dish image"
               />
-              {touched.dishImage && errors.dishImage && (
-                <Text style={styles.errorText}>{errors.dishImage}</Text>
+              {touched.productImage && errors.productImage && (
+                <Text style={styles.errorText}>{errors.productImage}</Text>
               )}
             </View>
 

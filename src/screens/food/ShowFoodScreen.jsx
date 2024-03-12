@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
@@ -12,6 +11,7 @@ import {Popup} from '../../../components/utilis/PopupComponent';
 import {FoodCard} from '../../../components/showPage/FoodCard';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 export const ShowFoodScreen = () => {
   const navigation = useNavigation();
@@ -19,6 +19,8 @@ export const ShowFoodScreen = () => {
   const [selectedFood, setSelectedFood] = useState(null);
 
   const [foods, setFoods] = useState([]);
+
+  const user = useSelector(state => state.user);
 
   const deleteButton = id => {
     Alert.alert(
@@ -42,7 +44,7 @@ export const ShowFoodScreen = () => {
   const deleteFood = async id => {
     try {
       await axios.delete(
-        `http://192.168.98.28:8080/api/admin/dish/delete/${id}`,
+        `http://192.168.237.28:8080/api/admin/product/delete/${id}`,
       );
       const updatedFoods = foods.filter(food => food._id !== id);
       setFoods(updatedFoods);
@@ -56,10 +58,9 @@ export const ShowFoodScreen = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          'http://192.168.98.28:8080/api/admin/dish',
+          `http://192.168.237.28:8080/api/admin/product/shop/${user._id}`,
         );
         setFoods(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -79,11 +80,12 @@ export const ShowFoodScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        {foods?.map(food => (
+        <Text>{JSON.stringify(user)}</Text>
+        {foods?.reverse().map(product => (
           <FoodCard
-            key={food._id}
-            food={food}
-            handleOpenPopup={() => handleOpenPopup(food)}
+            key={product._id}
+            product={product}
+            handleOpenPopup={() => handleOpenPopup(product)}
             deleteButton={deleteButton}
           />
         ))}

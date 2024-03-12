@@ -11,30 +11,39 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 const validationSchema = yup.object().shape({
-  dishName: yup.string().required('Product Name is required'),
-  dishDescription: yup.string().required('Product Description is required'),
-  restaurant: yup.string().required('Restaurant is required'),
-  dishPrice: yup.number().required('Product Price is required'),
+  productName: yup.string().required('Product Name is required'),
+  productDescription: yup.string().required('Product Description is required'),
+  shop: yup.string().required('Shop is required'),
+  productImage: yup.string().required('Product Image is required'),
+  productType : yup.string().required('Product Type is required'),
+  productPrice: yup.string().required('Product Price is required'),
 });
 
 export const AddStationeryScreen = () => {
-  const restaurants = [
-    {label: 'Restaurant A', value: 'restaurantA'},
-    {label: 'Restaurant B', value: 'restaurantB'},
-    {label: 'Restaurant C', value: 'restaurantC'},
+  const shops = [
+    {label: 'shop A', value: 'shopA'},
+    {label: 'shop B', value: 'shopB'},
+    {label: 'shop C', value: 'shopC'},
   ];
+
+  const user = useSelector(state => state.user);
+
+  const navigation = useNavigation();
 
   const handleAddProduct = async values => {
     console.log(values, 'values');
     try {
       await axios
-        .post(`http://192.168.98.28:8080/api/admin/dish/insert`, values)
+        .post(`http://192.168.237.28:8080/api/admin/product/insert`, values)
         .then(res => {
           console.log(res);
           console.log(res.data);
         });
+      navigation.navigate('ShowStationeryScreen');
     } catch (error) {
       console.log('Error Occured ', error);
     }
@@ -44,12 +53,13 @@ export const AddStationeryScreen = () => {
     <ScrollView style={styles.container}>
       <Formik
         initialValues={{
-          dishName: '',
-          dishDescription: '',
-          restaurant: 'null',
-          dishImage: '',
-          dishPrice: '',
-          isDishAvailable: false,
+          productName: '',
+          productDescription: '',
+          shop: user.name,
+          productImage: '',
+          productType : '',
+          productPrice: '',
+          isProductAvailable: false,
         }}
         validationSchema={validationSchema}
         onSubmit={handleAddProduct}>
@@ -62,71 +72,78 @@ export const AddStationeryScreen = () => {
           setFieldValue,
         }) => (
           <View>
-            <View>
-              <Text style={styles.label}>Product Name</Text>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Product Name</Text>
               <TextInput
-                style={styles.input}
-                value={values.dishName}
-                onChangeText={handleChange('dishName')}
-                placeholder="Enter product name"
+                onChangeText={handleChange('productName')}
+                placeholder="Enter Dish name"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={values.productName}
               />
-              {touched.dishName && errors.dishName && (
-                <Text style={styles.errorText}>{errors.dishName}</Text>
+              {touched.productName && errors.productName && (
+                <Text style={styles.errorText}>{errors.productName}</Text>
               )}
             </View>
 
-            <View>
-              <Text style={styles.label}>Product Description</Text>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Product Description</Text>
               <TextInput
-                style={styles.input}
-                value={values.dishDescription}
-                onChangeText={handleChange('dishDescription')}
-                placeholder="Enter product description"
+                onChangeText={handleChange('productDescription')}
+                placeholder="Enter Dish description"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={values.productDescription}
+                
               />
-              {touched.dishDescription && errors.dishDescription && (
-                <Text style={styles.errorText}>{errors.dishDescription}</Text>
+              {touched.productDescription && errors.productDescription && (
+                <Text style={styles.errorText}>
+                  {errors.productDescription}
+                </Text>
               )}
             </View>
 
-            <View>
-              <Text style={styles.label}>Restaurant</Text>
-              <DropDownPicker
-                items={restaurants}
-                defaultValue={values.restaurant}
-                containerStyle={{height: 40, marginBottom: 16}}
-                style={styles.dropdown}
-                dropDownStyle={styles.dropdown}
-                onChangeItem={item => setFieldValue('restaurant', item.value)}
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Shop</Text>
+              <TextInput
+                onChangeText={handleChange('shop')}
+                placeholder="Enter Restaurant"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={values.shop}
+                editable={false}
+                selectTextOnFocus={false}
               />
-              {touched.restaurant && errors.restaurant && (
-                <Text style={styles.errorText}>{errors.restaurant}</Text>
+              {touched.shop && errors.shop && (
+                <Text style={styles.errorText}>{errors.shop}</Text>
               )}
             </View>
 
-            <View>
-              <Text style={styles.label}>Product Price</Text>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Product Price</Text>
               <TextInput
-                style={styles.input}
-                value={values.dishPrice}
-                onChangeText={handleChange('dishPrice')}
-                placeholder="Enter product price"
-                keyboardType="numeric"
+                onChangeText={handleChange('productPrice')}
+                placeholder="Enter Product Price"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={values.productPrice}
               />
-              {touched.dishPrice && errors.dishPrice && (
-                <Text style={styles.errorText}>{errors.dishPrice}</Text>
+              {touched.productPrice && errors.productPrice && (
+                <Text style={styles.errorText}>{errors.productPrice}</Text>
               )}
             </View>
 
-            <View>
-              <Text style={styles.label}>Product Image</Text>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Product Image</Text>
               <TextInput
-                style={styles.input}
-                value={values.dishImage}
-                onChangeText={handleChange('dishImage')}
-                placeholder="Enter product image"
+                onChangeText={handleChange('productImage')}
+                placeholder="Enter Product Image"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={values.productImage}
               />
-              {touched.dishImage && errors.dishImage && (
-                <Text style={styles.errorText}>{errors.dishImage}</Text>
+              {touched.productImage && errors.productImage && (
+                <Text style={styles.errorText}>{errors.productImage}</Text>
               )}
             </View>
 
@@ -146,17 +163,25 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
-  label: {
-    fontSize: 16,
+  input: {
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#222',
     marginBottom: 8,
   },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 16,
-    padding: 8,
+  inputControl: {
+    height: 44,
+    backgroundColor: '#f1f5f9',
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#222',
   },
+
   errorText: {
     color: 'red',
     fontSize: 14,

@@ -10,7 +10,9 @@ import {
 import {Popup} from '../../../components/utilis/PopupComponent';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-import { StationeryCard } from '../../../components/showPage/StationeryCard';
+import {StationeryCard} from '../../../components/showPage/StationeryCard';
+import {PopupStationery} from '../../../components/utilis/PopupStationery';
+import {useSelector} from 'react-redux';
 
 export const ShowStationeryScreen = () => {
   const navigation = useNavigation();
@@ -18,6 +20,8 @@ export const ShowStationeryScreen = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const [products, setProducts] = useState([]);
+  const user = useSelector(state => state.user);
+  const [loading, setLoading] = useState(true);
 
   const deleteButton = id => {
     Alert.alert(
@@ -41,7 +45,7 @@ export const ShowStationeryScreen = () => {
   const deleteFood = async id => {
     try {
       await axios.delete(
-        `http://192.168.98.28:8080/api/admin/dish/delete/${id}`,
+        `http://192.168.237.28:8080/api/admin/product/delete/${id}`,
       );
       const updatedFoods = products.filter(product => product._id !== id);
       setProducts(updatedFoods);
@@ -51,19 +55,29 @@ export const ShowStationeryScreen = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          'http://192.168.98.28:8080/api/admin/dish',
-        );
-        setProducts(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchData();
+  const fetchData = async () => {
+    try {
+      console.log(user && user._id, 'user._id');
+      const response = await axios.get(
+        `http://192.168.237.28:8080/api/admin/product/shop/${user._id}`,
+      );
+      setProducts(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(async () => {
+    setTimeout(() => {
+      fetchData();
+    }, 2000);
   }, []);
+
+  useEffect(() => {
+    if (products.length > 0) {
+      setLoading(false);
+    }
+  }, [products]);
 
   const handleOpenPopup = product => {
     setSelectedProduct(product);
@@ -77,14 +91,20 @@ export const ShowStationeryScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        {products?.map(product => (
-          <StationeryCard
-            key={product._id}
-            product={product}
-            handleOpenPopup={() => handleOpenPopup(product)}
-            deleteButton={deleteButton}
-          />
-        ))}
+        {loading ? (
+          <Text>Loading...</Text>
+        ) : (
+          <>
+            {products?.reverse().map(product => (
+              <StationeryCard
+                key={product._id}
+                product={product}
+                handleOpenPopup={() => handleOpenPopup(product)}
+                deleteButton={deleteButton}
+              />
+            ))}
+          </>
+        )}
       </ScrollView>
       <TouchableOpacity
         style={styles.floatingButton}
@@ -92,7 +112,7 @@ export const ShowStationeryScreen = () => {
         <Text style={styles.floatingButtonText}>+</Text>
       </TouchableOpacity>
 
-      <Popup
+      <PopupStationery
         visible={popupVisible}
         onClose={handleClosePopup}
         product={selectedProduct}

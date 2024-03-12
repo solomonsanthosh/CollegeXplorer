@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
-import { Formik } from 'formik';
+import axios from 'axios';
+import {Formik} from 'formik';
 import React, {useState} from 'react';
 import {
   View,
@@ -8,7 +9,9 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import * as yup from 'yup';
+import {loginRedux} from '../../../redux/action';
 
 const validationSchema = yup.object().shape({
   emailLogin: yup.string().required('Email is required'),
@@ -18,86 +21,120 @@ const validationSchema = yup.object().shape({
 export const LoginScreen = () => {
   const navigation = useNavigation();
 
-  const handleLogin = (values) => {
-    console.log(
-      `Login pressed with email: ${values.emailLogin} and password: ${values.passwordLogin}`,
-    );
-    console.log(JSON.stringify(values));
+  const dispatch = useDispatch();
+
+  const [shopData, setShopData] = useState({});
+
+  const user = useSelector(state => state.user);
+
+  const handleLogin = async values => {
+    try {
+      if (values.emailLogin === '') {
+        alert('Email is required');
+        return;
+      }
+      if (values.passwordLogin === '') {
+        alert('Password is required');
+        return;
+      }
+      console.log(
+        `Login pressed with email: ${values.emailLogin} and password: ${values.passwordLogin}`,
+      );
+      console.log('values', values);
+      await axios
+        .post(`http://192.168.237.28:8080/api/admin/adminuser/login`, {
+          emailLogin: values.emailLogin,
+          passwordLogin: values.passwordLogin,
+        })
+        .then(response => {
+          setShopData(response.data);
+          if (response.data.shopType == 'food') {
+            navigation.navigate('ShowFoodScreen');
+          } else if (response.data.shopType == 'stationery') {
+            navigation.navigate('ShowStationeryScreen');
+          }
+          dispatch(loginRedux(response.data));
+        });
+    } catch(e) {
+      console.log('Error', e);
+    }
+
+    
   };
 
-  // const handleForgotPassword = () => {
-  //   // Implement your forgot password logic here
-  //   console.log('Forgot Password pressed');
-  // };
-
   return (
-    <View style={styles.container}>
-      <Formik
-        initialValues={{
-          emailLogin: '',
-          passwordLogin: '',
-        }}
-        validationSchema={validationSchema}
-        onSubmit={handleLogin}>
-        {({
-          handleChange,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-          setFieldValue,
-        }) => (
-          <View style={styles.formContainer}>
-            <Text
-              style={{
-                fontSize: 24,
-                fontWeight: 'bold',
-                marginBottom: 16,
-                textAlign: 'center',
-              }}>
-              Login
-            </Text>
+    <>
+      {user && user.shopType == 'food' && navigation.navigate('ShowFoodScreen')}
+      <View style={styles.container}>
+        <Formik
+          initialValues={{
+            emailLogin: '',
+            passwordLogin: '',
+          }}
+          validationSchema={validationSchema}
+          onSubmit={handleLogin}>
+          {({
+            handleChange,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+            setFieldValue,
+          }) => (
+            <View style={styles.formContainer}>
+              <Text
+                style={{
+                  fontSize: 24,
+                  fontWeight: 'bold',
+                  marginBottom: 16,
+                  textAlign: 'center',
+                }}>
+                Login
+              </Text>
 
-            <View>
-              <Text style={styles.label}>Email</Text>
-              <TextInput
-                style={styles.input}
-                value={values.emailLogin}
-                onChangeText={handleChange('emailLogin')}
-                placeholder="Enter Email"
-              />
-              {touched.emailLogin && errors.emailLogin && (
-                <Text style={styles.errorText}>{errors.emailLogin}</Text>
-              )}
-            </View>
+              <View>
+                <Text style={styles.label}>Email</Text>
+                <TextInput
+                  style={styles.input}
+                  value={values.emailLogin}
+                  onChangeText={handleChange('emailLogin')}
+                  placeholder="Enter Email"
+                />
+                {touched.emailLogin && errors.emailLogin && (
+                  <Text style={styles.errorText}>{errors.emailLogin}</Text>
+                )}
+              </View>
 
-            <View>
-              <Text style={styles.label}>Password</Text>
-              <TextInput
-                style={styles.input}
-                value={values.passwordLogin}
-                onChangeText={handleChange('passwordLogin')}
-                placeholder="Enter Password"
-              />
-              {touched.passwordLogin && errors.passwordLogin && (
-                <Text style={styles.errorText}>{errors.passwordLogin}</Text>
-              )}
-            </View>
+              <View>
+                <Text style={styles.label}>Password</Text>
+                <TextInput
+                  style={styles.input}
+                  value={values.passwordLogin}
+                  onChangeText={handleChange('passwordLogin')}
+                  placeholder="Enter Password"
+                />
+                {touched.passwordLogin && errors.passwordLogin && (
+                  <Text style={styles.errorText}>{errors.passwordLogin}</Text>
+                )}
+              </View>
 
-            {/* <TouchableOpacity onPress={handleForgotPassword}>
+              {/* <TouchableOpacity onPress={handleForgotPassword}>
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity> */}
-            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-              <Text style={styles.loginButtonText}>Login</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('RegisterScreen')}>
-              <Text style={styles.registerLinkText}>Create an account</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </Formik>
-    </View>
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={handleSubmit}>
+                <Text style={styles.loginButtonText}>Login</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('RegisterScreen')}>
+                <Text style={styles.registerLinkText}>Create an account</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </Formik>
+      </View>
+    </>
   );
 };
 

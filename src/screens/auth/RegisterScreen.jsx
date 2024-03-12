@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
 import {Formik} from 'formik';
 import React, {useState} from 'react';
 import {
@@ -7,134 +8,225 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import * as yup from 'yup';
 
 const validationSchema = yup.object().shape({
-  nameRegister: yup.string().required('Name is required'),
-  emailRegister: yup.string().required('Email is required'),
-  passwordRegister: yup.string().required('Password is required'),
-  confirmPasswordRegister: yup
-    .string()
-    .required('Confirm Password is required'),
+  adminName: yup.string().required('Name is required'),
+  adminEmail: yup.string().required('Email is required'),
+  shopName: yup.string().required('Shop Name is required'),
+  shopDescription: yup.string().required('Shop Description is required'),
+  shopLoc: yup.string().required('Shop Location is required'),
+  shopImage: yup.string().required('Shop Image is required'),
+  shopType: yup.string().required('Shop Type is required'),
+  adminPassword: yup.string().required('Password is required'),
+  adminConfirmPassword: yup.string().required('Confirm Password is required'),
 });
 
 export const RegisterScreen = () => {
   const navigation = useNavigation();
 
   const handleRegister = values => {
-    console.log(
-      `Register pressed with email: ${values.emailRegister} and password: ${values.passwordRegister}`,
-    );
-    console.log(JSON.stringify(values));
+    axios.post(`http://192.168.237.28:8080/api/admin/adminuser/create`, values, () => {
+      console.log(values, "values");
+      alert('Admin User Created Successfully');
+      navigation.navigate('LoginScreen');
+    });
   };
 
   return (
-    <View style={styles.container}>
-      <Formik
-        initialValues={{
-          nameRegister: '',
-          emailRegister: '',
-          passwordRegister: '',
-          confirmPasswordRegister: '',
-        }}
-        validationSchema={validationSchema}
-        onSubmit={handleRegister}>
-        {({
-          handleChange,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-          setFieldValue,
-        }) => (
-          <View style={styles.formContainer}>
-            <Text
-              style={{
-                fontSize: 24,
-                fontWeight: 'bold',
-                marginBottom: 16,
-                textAlign: 'center',
-              }}>
-              Register
-            </Text>
+    <ScrollView style={styles.container}>
+      <View style={{
+        flex: 1,
+        paddingVertical : 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+        <Formik
+          initialValues={{
+            adminName: '',
+            adminEmail: '',
+            shopName: '',
+            shopDescription: '',
+            shopLoc: '',
+            shopImage: '',
+            shopType: '',
+            adminPassword: '',
+            adminConfirmPassword: '',
+          }}
+          validationSchema={validationSchema}
+          onSubmit={handleRegister}>
+          {({
+            handleChange,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+            setFieldValue,
+          }) => (
+            <View style={styles.formContainer}>
+              <Text
+                style={{
+                  fontSize: 24,
+                  fontWeight: 'bold',
+                  marginBottom: 16,
+                  textAlign: 'center',
+                }}>
+                Register
+              </Text>
 
-            <View>
-              <Text style={styles.label}>Email</Text>
-              <TextInput
-                style={styles.input}
-                value={values.emailRegister}
-                onChangeText={handleChange('emailRegister')}
-                placeholder="Enter Email"
-              />
-              {touched.emailRegister && errors.emailRegister && (
-                <Text style={styles.errorText}>{errors.emailRegister}</Text>
-              )}
-            </View>
-
-            <View>
-              <Text style={styles.label}>Name</Text>
-              <TextInput
-                style={styles.input}
-                value={values.nameRegister}
-                onChangeText={handleChange('nameRegister')}
-                placeholder="Enter Name"
-              />
-              {touched.nameRegister && errors.nameRegister && (
-                <Text style={styles.errorText}>{errors.nameRegister}</Text>
-              )}
-            </View>
-
-            <View>
-              <Text style={styles.label}>Password</Text>
-              <TextInput
-                style={styles.input}
-                value={values.passwordRegister}
-                onChangeText={handleChange('passwordRegister')}
-                placeholder="Enter Password"
-              />
-              {touched.passwordRegister && errors.passwordRegister && (
-                <Text style={styles.errorText}>{errors.passwordRegister}</Text>
-              )}
-            </View>
-
-            <View>
-              <Text style={styles.label}>Confirm Password</Text>
-              <TextInput
-                style={styles.input}
-                value={values.confirmPasswordRegister}
-                onChangeText={handleChange('confirmPasswordRegister')}
-                placeholder="Enter Confirm Password"
-              />
-              {touched.confirmPasswordRegister &&
-                errors.confirmPasswordRegister && (
-                  <Text style={styles.errorText}>
-                    {errors.confirmPasswordRegister}
-                  </Text>
+              {/* Name field */}
+              <View>
+                <Text style={styles.label}>Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={values.adminName}
+                  onChangeText={handleChange('adminName')}
+                  placeholder="Enter Name"
+                />
+                {touched.adminName && errors.adminName && (
+                  <Text style={styles.errorText}>{errors.adminName}</Text>
                 )}
-            </View>
+              </View>
 
-            <TouchableOpacity
-              style={styles.registerButton}
-              onPress={handleRegister}>
-              <Text style={styles.registerButtonText}>Sign up</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('LoginScreen')}>
-              <Text style={styles.loginLinkText}>Already have an account</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </Formik>
-    </View>
+              {/* Email Field */}
+              <View>
+                <Text style={styles.label}>Email</Text>
+                <TextInput
+                  style={styles.input}
+                  value={values.adminEmail}
+                  onChangeText={handleChange('adminEmail')}
+                  placeholder="Enter Email"
+                />
+                {touched.adminEmail && errors.adminEmail && (
+                  <Text style={styles.errorText}>{errors.adminEmail}</Text>
+                )}
+              </View>
+
+              {/* Shop Name Field */}
+              <View>
+                <Text style={styles.label}>Shop Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={values.shopName}
+                  onChangeText={handleChange('shopName')}
+                  placeholder="Enter Shop Name"
+                />
+                {touched.shopName && errors.shopName && (
+                  <Text style={styles.errorText}>{errors.shopName}</Text>
+                )}
+              </View>
+
+              {/* Shop Description Field */}
+              <View>
+                <Text style={styles.label}>Shop Description</Text>
+                <TextInput
+                  style={styles.input}
+                  value={values.shopDescription}
+                  onChangeText={handleChange('shopDescription')}
+                  placeholder="Enter Shop Description"
+                />
+                {touched.shopDescription && errors.shopDescription && (
+                  <Text style={styles.errorText}>{errors.shopDescription}</Text>
+                )}
+              </View>
+
+              {/* Shop Location Field */}
+              <View>
+                <Text style={styles.label}>Shop Location</Text>
+                <TextInput
+                  style={styles.input}
+                  value={values.shopLoc}
+                  onChangeText={handleChange('shopLoc')}
+                  placeholder="Enter Shop Location"
+                />
+                {touched.shopLoc && errors.shopLoc && (
+                  <Text style={styles.errorText}>{errors.shopLoc}</Text>
+                )}
+              </View>
+
+              {/* Shop Image  Field */}
+              <View>
+                <Text style={styles.label}>Shop Image</Text>
+                <TextInput
+                  style={styles.input}
+                  value={values.shopImage}
+                  onChangeText={handleChange('shopImage')}
+                  placeholder="Enter Shop Image"
+                />
+                {touched.shopImage && errors.shopImage && (
+                  <Text style={styles.errorText}>{errors.shopImage}</Text>
+                )}
+              </View>
+
+              {/* Shop Type Field */}
+              <View>
+                <Text style={styles.label}>Shop Type</Text>
+                <TextInput
+                  style={styles.input}
+                  value={values.shopType}
+                  onChangeText={handleChange('shopType')}
+                  placeholder="Enter Shop Type"
+                />
+                {touched.shopType && errors.shopType && (
+                  <Text style={styles.errorText}>{errors.shopType}</Text>
+                )}
+              </View>
+
+              {/* Password Field */}
+              <View>
+                <Text style={styles.label}>Password</Text>
+                <TextInput
+                  style={styles.input}
+                  value={values.adminPassword}
+                  onChangeText={handleChange('adminPassword')}
+                  placeholder="Enter Password"
+                />
+                {touched.adminPassword && errors.adminPassword && (
+                  <Text style={styles.errorText}>{errors.adminPassword}</Text>
+                )}
+              </View>
+
+              {/* Confirm Password Field */}
+              <View>
+                <Text style={styles.label}>Confirm Password</Text>
+                <TextInput
+                  style={styles.input}
+                  value={values.adminConfirmPassword}
+                  onChangeText={handleChange('adminConfirmPassword')}
+                  placeholder="Enter Confirm Password"
+                />
+                {touched.adminConfirmPassword &&
+                  errors.adminConfirmPassword && (
+                    <Text style={styles.errorText}>
+                      {errors.adminConfirmPassword}
+                    </Text>
+                  )}
+              </View>
+
+              <TouchableOpacity
+                style={styles.registerButton}
+                onPress={handleSubmit}>
+                <Text style={styles.registerButtonText}>Sign up</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('LoginScreen')}>
+                <Text style={styles.loginLinkText}>
+                  Already have an account
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </Formik>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#fff',
   },
   formContainer: {

@@ -10,36 +10,33 @@ import {
   Alert,
 } from 'react-native';
 
-export const StationeryCard = ({food, handleOpenPopup, deleteButton}) => {
+export const StationeryCard = ({product, handleOpenPopup, deleteButton}) => {
   const navigation = useNavigation();
-  const [modalVisible, setModalVisible] = useState(false);
-
-  console.log(food);
 
   return (
     <View style={styles.cardContainer}>
       <View style={styles.card} onPress={() => console.log('I am pressed')}>
-        <Image source={{uri: food?.dishImage}} style={styles.cardImage} />
+        <Image source={{uri: product?.productImage}} style={styles.cardImage} />
         <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>{food?.dishName}</Text>
-          <Text style={styles.cardPrice}>${food?.dishPrice}</Text>
+          <Text style={styles.cardTitle}>{product?.productName}</Text>
+          <Text style={styles.cardPrice}>${product?.productPrice}</Text>
           <View style={styles.iconContainer}>
             <TouchableOpacity
               style={styles.icon}
-              onPress={() => handleOpenPopup(food)}>
+              onPress={() => handleOpenPopup(product)}>
               <Text style={styles.iconText}>View</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.icon}
               onPress={() =>
-                navigation.navigate('EditFoodScreen', {food: food})
+                navigation.navigate('EditStationeryScreen', {product: product})
               }>
               <Text style={styles.iconText}>Update</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.icon}
               // onPress={() => setModalVisible(true)}
-              onPress={() => deleteButton(food._id)}>
+              onPress={() => deleteButton(product._id)}>
               <Text style={styles.iconText}>Delete</Text>
             </TouchableOpacity>
           </View>

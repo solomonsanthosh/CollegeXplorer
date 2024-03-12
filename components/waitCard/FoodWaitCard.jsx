@@ -1,44 +1,41 @@
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React from 'react';
 import {useNavigation} from '@react-navigation/native';
-import axios from 'axios';
-import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-} from 'react-native';
 
-export const FoodCard = ({product, handleOpenPopup, deleteButton}) => {
+export const FoodWaitCard = ({order}) => {
   const navigation = useNavigation();
-  const [modalVisible, setModalVisible] = useState(false);
+
+  const acceptDish = () => {
+    console.log('accept dish');
+  };
+
+  const declineDish = () => {
+    console.log('decline dish');
+  };
 
   return (
     <View style={styles.cardContainer}>
       <View style={styles.card} onPress={() => console.log('I am pressed')}>
-        <Image source={{uri: product?.productImage}} style={styles.cardImage} />
         <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>{product?.productName}</Text>
-          <Text style={styles.cardPrice}>${product?.productPrice}</Text>
+          <Text style={styles.cardTitle}>{order.user.name}</Text>
+          {order.items &&
+            order.items.map((item, index) => (
+              <View key={index}>
+                <Text style={{color: '#000'}}>
+                  {item.dish.dishName} - {item.quantity}
+                </Text>
+              </View>
+            ))}
           <View style={styles.iconContainer}>
             <TouchableOpacity
-              style={styles.icon}
-              onPress={() => handleOpenPopup(product)}>
-              <Text style={styles.iconText}>View</Text>
+              style={[styles.icon, {backgroundColor: '#68BA6A'}]}
+              onPress={() => acceptDish()}>
+              <Text style={[styles.iconText, {color: '#fff'}]}>Accept</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.icon}
-              onPress={() =>
-                navigation.navigate('EditFoodScreen', {product: product})
-              }>
-              <Text style={styles.iconText}>Update</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.icon}
-              // onPress={() => setModalVisible(true)}
-              onPress={() => deleteButton(product._id)}>
-              <Text style={styles.iconText}>Delete</Text>
+              style={[styles.icon, {backgroundColor: '#E74C3C'}]}
+              onPress={() => declineDish()}>
+              <Text style={[styles.iconText, {color: '#fff'}]}>Decline</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -74,7 +71,6 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     flex: 1,
-    color: 'black',
   },
   cardTitle: {
     fontSize: 16,
@@ -92,7 +88,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   icon: {
-    marginLeft: 8,
+    width: '50%',
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 10,
+    marginHorizontal: 4,
   },
   iconText: {
     color: '#888',
