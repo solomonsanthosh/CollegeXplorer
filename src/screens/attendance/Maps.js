@@ -29,7 +29,7 @@ const Maps = ({route}) => {
 
   return (
     <View style={{flex: 1}}>
-      <Text>{message}</Text>
+      <Text style={{color : "#1e1e1e"}}>{message}</Text>
       <Image source={{uri: picture}} style={styles.cardImage} />
 
       <MapView

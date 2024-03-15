@@ -37,7 +37,7 @@ export const EditStationeryScreen = ({route}) => {
           Alert.alert('Success', 'Product Updated Successfully', [
             {
               text: 'OK',
-              onPress: () => navigation.navigate('ShowFoodScreen'),
+              onPress: () => navigation.navigate('StationeryBottomNav'),
             },
           ]);
         });

@@ -4,61 +4,73 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TextInput,
+  ScrollView,
+  Image,
 } from 'react-native';
 import React from 'react';
+import {useSelector} from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 const AdminDashboard = () => {
+  const user = useSelector(state => state.user);
+  const navigation = useNavigation()
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>
-        <View>
-          <View style={styles.actionWrapper}>
-            <TouchableOpacity
-              onPress={() => {
-                // handle onPress
-              }}
-              style={{marginRight: 'auto'}}></TouchableOpacity>
+        <Text style={styles.title}>Admin Dashboard</Text>
 
-            <TouchableOpacity
-              onPress={() => {
-                // handle onPress
-              }}></TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                // handle onPress
-              }}></TouchableOpacity>
+        <View style={styles.list}>
+          <View style={styles.listHeader}>
+            <Text style={styles.listTitle}>Create Accounts</Text>
           </View>
 
-          <Text style={styles.title}>Online Orders</Text>
-
-          <View style={styles.search}>
-            <View style={styles.searchInput}>
-              <View style={styles.inputWrapper}>
-                <TextInput
-                  placeholder="Enter tracking code"
-                  placeholderTextColor="#9eadba"
-                  style={styles.input}
-                />
-              </View>
-            </View>
-
+          <View style={styles.listContent}>
             <TouchableOpacity
               onPress={() => {
-                // handle onPress
+                navigation.navigate('CreateFoodShop')
               }}>
-              <View style={styles.btn}>
-                <Text style={styles.btnText}>Submit</Text>
+              <View style={[styles.card, {backgroundColor: '#B2DCC4'}]}>
+                <Image
+                  source={{
+                    uri: 'https://cdn-icons-png.freepik.com/512/9620/9620771.png',
+                  }}
+                  style={styles.cardImg}
+                />
+                <Text style={styles.cardLabel}>Create Cafe</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('CreateStationeryShop')
+              }}>
+              <View style={[styles.card, {backgroundColor: '#F7C5BA'}]}>
+                <Image
+                  source={{
+                    uri: 'https://cdn-icons-png.flaticon.com/512/3238/3238057.png',
+                  }}
+                  style={styles.cardImg}
+                />
+                <Text style={styles.cardLabel}>Create Shop</Text>
               </View>
             </TouchableOpacity>
           </View>
-        </View>
-
-        <View style={styles.placeholder}>
-          <View style={styles.placeholderInset}>
-            {/* Replace with your content */}
-          </View>
+          <View style={styles.listContent}>
+          <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('CreateTeacher')
+              }}>
+              <View style={[styles.card, {backgroundColor: '#F7EDD0'}]}>
+                <Image
+                  source={{
+                    uri: 'https://cdn-icons-png.flaticon.com/512/8065/8065183.png',
+                  }}
+                  style={styles.cardImg}
+                />
+                <Text style={styles.cardLabel}>Create Teacher</Text>
+              </View>
+            </TouchableOpacity>
+            </View>
         </View>
       </View>
     </SafeAreaView>
@@ -67,106 +79,74 @@ const AdminDashboard = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    paddingVertical: 24,
+    paddingHorizontal: 0,
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
   },
   title: {
-    fontSize: 27,
+    paddingHorizontal: 24,
+    fontSize: 32,
     fontWeight: '700',
-    color: '#222',
-    marginTop: 24,
-    marginBottom: 16,
+    color: '#1d1d1d',
+    marginBottom: 12,
   },
-  /** Action */
-  action: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    marginHorizontal: 8,
-    backgroundColor: '#e8f0f9',
-    alignItems: 'center',
-    justifyContent: 'center',
+  /** List */
+  list: {
+    marginBottom: 24,
   },
-  actionWrapper: {
+  listHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginHorizontal: -8,
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
   },
-  /** Search */
-  search: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  searchInput: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    marginRight: 12,
-  },
-  /** Input */
-  input: {
-    height: 44,
-    backgroundColor: '#f0f6fb',
-    paddingLeft: 44,
-    paddingRight: 24,
-    borderRadius: 12,
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#222',
-  },
-  inputWrapper: {
-    position: 'relative',
-    width: '100%',
-  },
-  inputIcon: {
-    position: 'absolute',
-    width: 44,
-    height: 44,
-    top: 0,
-    left: 0,
-    bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  /** Button */
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    backgroundColor: '#222',
-    borderColor: '#222',
-  },
-  btnText: {
-    fontSize: 17,
-    lineHeight: 24,
+  listTitle: {
     fontWeight: '600',
-    color: '#fff',
+    fontSize: 20,
+    lineHeight: 28,
+    color: '#323142',
   },
-  /** Placeholder */
-  placeholder: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    height: 400,
-    marginTop: 24,
-    padding: 0,
-    backgroundColor: 'transparent',
+  listAction: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
-  placeholderInset: {
-    borderWidth: 4,
-    borderColor: '#e5e7eb',
-    borderStyle: 'dashed',
-    borderRadius: 9,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
+  listActionText: {
+    fontSize: 14,
+    fontWeight: '500',
+    lineHeight: 20,
+    color: '#706f7b',
+    marginRight: 2,
+  },
+  listContent: {
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    flexDirection: 'row',
+    justifyContent : 'space-between',
+  },
+  /** Card */
+  card: {
+    width: 150,
+    paddingVertical: 16,
+    paddingHorizontal: 6,
+    borderRadius: 12,
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginHorizontal: 6,
+  },
+  cardImg: {
+    width: 40,
+    height: 40,
+    marginBottom: 12,
+  },
+  cardLabel: {
+    fontWeight: '600',
+    fontSize: 14,
+    textAlign: 'center',
+    lineHeight: 18,
+    color: '#252117',
   },
 });
 

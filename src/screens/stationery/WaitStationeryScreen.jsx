@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import { FoodWaitCard } from '../../../components/waitCard/FoodWaitCard';
 import { useSelector } from 'react-redux';
 
-export const WaitFoodScreen = () => {
+export const WaitStationeryScreen = () => {
   const user = useSelector(state => state.user);
   const [allOrders, setAllOrders] = useState([]);
   const [loading, setLoading] = useState(true);

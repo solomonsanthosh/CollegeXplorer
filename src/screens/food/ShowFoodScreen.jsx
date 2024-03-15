@@ -87,10 +87,10 @@ export const ShowFoodScreen = () => {
     <View style={styles.container}>
       <ScrollView>
         {loading ? (
-          <Text>Loading...</Text>
+          <Text style={{color : "#1e1e1e"}}>Loading...</Text>
         ) : (
           <>
-            {products?.length === 0 && <Text>No products found</Text>}
+            {products?.length === 0 && <Text style={{color : "#1e1e1e"}}>No products found</Text>}
             {products?.reverse().map(product => (
               <FoodCard
                 key={product._id}
@@ -111,7 +111,7 @@ export const ShowFoodScreen = () => {
       <Popup
         visible={popupVisible}
         onClose={handleClosePopup}
-        product={selectedProduct}
+        food={selectedProduct}
       />
     </View>
   );

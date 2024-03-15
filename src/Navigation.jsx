@@ -16,6 +16,18 @@ import {WaitFoodScreen} from './screens/food/WaitFoodScreen';
 import {MapScreen} from './screens/map/MapScreen';
 import {useSelector} from 'react-redux';
 import AdminDashboard from './screens/superAdmin/AdminDashboard';
+import { CreateStationeryShop } from './screens/superAdmin/CreateStationeryShop';
+import { CreateFoodShop } from './screens/superAdmin/CreateFoodShop';
+import { CreateTeacher } from './screens/superAdmin/CreateTeacher';
+import TeacherSearch from './screens/teacher/TeacherSearch';
+import FoodBottomNav from './navigation/FoodBottomNav';
+import StationeryBottomNav from './navigation/StationeryBottomNav';
+import TeacherBottomNav from './navigation/TeacherBottomNav';
+import TeacherClass from './screens/teacher/TeacherClass';
+import TeacherProfile from './screens/teacher/TeacherProfile';
+import { WaitStationeryScreen } from './screens/stationery/WaitStationeryScreen';
+import TeacherNotes from './screens/teacher/TeacherNotes';
+import AddNotesTeacher from './screens/teacher/AddNotesTeacher';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,10 +35,9 @@ export default function Navigation() {
   const user = useSelector(state => state.user);
   return (
     <NavigationContainer>
-      {/* <Text>{JSON.stringify(user)}</Text> */}
       <Stack.Navigator
         screenOptions={{headerShown: false}}
-        initialRouteName="LoginScreen">
+        initialRouteName="TeacherBottomNav">
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="ShowFoodScreen" component={ShowFoodScreen} />
         <Stack.Screen name="AddFoodScreen" component={AddFoodScreen} />
@@ -34,8 +45,23 @@ export default function Navigation() {
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
 
+        {/* BottomNav */}
+        <Stack.Screen name="FoodBottomNav" component={FoodBottomNav} />
+        <Stack.Screen name="StationeryBottomNav" component={StationeryBottomNav} />
+        <Stack.Screen name="TeacherBottomNav" component={TeacherBottomNav} />
+
         {/* AdminDashboard */}
         <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
+        <Stack.Screen name="CreateStationeryShop" component={CreateStationeryShop} />
+        <Stack.Screen name="CreateFoodShop" component={CreateFoodShop} />
+        <Stack.Screen name="CreateTeacher" component={CreateTeacher} />
+
+        {/* Teacher */}
+        <Stack.Screen name="TeacherSearch" component={TeacherSearch} />
+        <Stack.Screen name="TeacherClass" component={TeacherClass} />
+        <Stack.Screen name="TeacherProfile" component={TeacherProfile} />
+        <Stack.Screen name="TeacherNotes" component={TeacherNotes} />
+        <Stack.Screen name="AddNotesTeacher" component={AddNotesTeacher} />
 
         {/* Food Wait Screen */}
         <Stack.Screen name="WaitFoodScreen" component={WaitFoodScreen} />
@@ -52,6 +78,10 @@ export default function Navigation() {
         <Stack.Screen
           name="EditStationeryScreen"
           component={EditStationeryScreen}
+        />
+        <Stack.Screen
+          name="WaitStationeryScreen"
+          component={WaitStationeryScreen}
         />
 
         {/* attendance */}

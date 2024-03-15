@@ -33,7 +33,7 @@ export const AddFoodScreen = () => {
           Alert.alert('Success', 'Product Added Successfully', [
             {
               text: 'OK',
-              onPress: () => navigation.navigate('ShowFoodScreen'),
+              onPress: () => navigation.navigate('FoodBottomNav'),
             },
           ]);
         });

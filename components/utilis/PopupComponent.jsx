@@ -10,6 +10,8 @@ import {
 
 export const Popup = ({visible, onClose, food}) => {
 
+  console.log(food);
+
   return (
     <Modal
       animationType="slide"

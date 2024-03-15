@@ -42,11 +42,11 @@ export const AddStationeryScreen = () => {
           Alert.alert('Success', 'Product Added Successfully', [
             {
               text: 'OK',
-              onPress: () => navigation.navigate('ShowStationeryScreen'), // Navigate after pressing "OK"
+              onPress: () => navigation.navigate('StationeryBottomNav'), // Navigate after pressing "OK"
             },
           ]);
         });
-      // navigation.navigate('ShowStationeryScreen');
+      // navigation.navigate('StationeryBottomNav');
     } catch (error) {
       console.log('Error Occured ', error);
     }

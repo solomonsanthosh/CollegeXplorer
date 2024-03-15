@@ -87,7 +87,7 @@ export const ShowStationeryScreen = () => {
     <View style={styles.container}>
       <ScrollView>
         {loading ? (
-          <Text>Loading...</Text>
+          <Text style={{color : "#1e1e1e"}}>Loading...</Text>
         ) : (
           <>
             {products?.reverse().map(product => (

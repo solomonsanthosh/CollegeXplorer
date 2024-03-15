@@ -24,21 +24,21 @@ const validationSchema = yup.object().shape({
   adminConfirmPassword: yup.string().required('Confirm Password is required'),
 });
 
-export const RegisterScreen = () => {
+export const CreateStationeryShop = () => {
   const navigation = useNavigation();
 
   const handleRegister = values => {
-    console.log('values', values);
     try {
+      console.log(values);
       axios
         .post(`http://192.168.1.8:8080/api/adminuser/create`, values)
-        .then(res => {
-          console.log(res.data);
+        .then((res) => {
+          console.log(res);
           alert('Admin User Created Successfully');
-          navigation.navigate('LoginScreen');
+          navigation.navigate('AdminDashboard');
         });
     } catch (e) {
-      console.log('Error', e);
+      console.log(e);
     }
   };
 
@@ -59,7 +59,7 @@ export const RegisterScreen = () => {
             shopDescription: '',
             shopLoc: '',
             shopImage: '',
-            shopType: '',
+            shopType: 'stationery',
             adminPassword: '',
             adminConfirmPassword: '',
           }}
@@ -80,14 +80,16 @@ export const RegisterScreen = () => {
                   fontWeight: 'bold',
                   marginBottom: 16,
                   textAlign: 'center',
+                  color: '#1e1e1e',
                 }}>
-                Register
+                Create Stationery Shop
               </Text>
 
               {/* Name field */}
               <View>
                 <Text style={styles.label}>Name</Text>
                 <TextInput
+                  placeholderTextColor="#8d8c8c"
                   style={styles.input}
                   value={values.adminName}
                   onChangeText={handleChange('adminName')}
@@ -102,6 +104,7 @@ export const RegisterScreen = () => {
               <View>
                 <Text style={styles.label}>Email</Text>
                 <TextInput
+                  placeholderTextColor="#8d8c8c"
                   style={styles.input}
                   value={values.adminEmail}
                   onChangeText={handleChange('adminEmail')}
@@ -116,6 +119,7 @@ export const RegisterScreen = () => {
               <View>
                 <Text style={styles.label}>Shop Name</Text>
                 <TextInput
+                  placeholderTextColor="#8d8c8c"
                   style={styles.input}
                   value={values.shopName}
                   onChangeText={handleChange('shopName')}
@@ -130,6 +134,7 @@ export const RegisterScreen = () => {
               <View>
                 <Text style={styles.label}>Shop Description</Text>
                 <TextInput
+                  placeholderTextColor="#8d8c8c"
                   style={styles.input}
                   value={values.shopDescription}
                   onChangeText={handleChange('shopDescription')}
@@ -144,6 +149,7 @@ export const RegisterScreen = () => {
               <View>
                 <Text style={styles.label}>Shop Location</Text>
                 <TextInput
+                  placeholderTextColor="#8d8c8c"
                   style={styles.input}
                   value={values.shopLoc}
                   onChangeText={handleChange('shopLoc')}
@@ -158,6 +164,7 @@ export const RegisterScreen = () => {
               <View>
                 <Text style={styles.label}>Shop Image</Text>
                 <TextInput
+                  placeholderTextColor="#8d8c8c"
                   style={styles.input}
                   value={values.shopImage}
                   onChangeText={handleChange('shopImage')}
@@ -172,6 +179,7 @@ export const RegisterScreen = () => {
               <View>
                 <Text style={styles.label}>Shop Type</Text>
                 <TextInput
+                  placeholderTextColor="#8d8c8c"
                   style={styles.input}
                   value={values.shopType}
                   onChangeText={handleChange('shopType')}
@@ -186,6 +194,7 @@ export const RegisterScreen = () => {
               <View>
                 <Text style={styles.label}>Password</Text>
                 <TextInput
+                  placeholderTextColor="#8d8c8c"
                   style={styles.input}
                   value={values.adminPassword}
                   onChangeText={handleChange('adminPassword')}
@@ -200,6 +209,7 @@ export const RegisterScreen = () => {
               <View>
                 <Text style={styles.label}>Confirm Password</Text>
                 <TextInput
+                  placeholderTextColor="#8d8c8c"
                   style={styles.input}
                   value={values.adminConfirmPassword}
                   onChangeText={handleChange('adminConfirmPassword')}
@@ -218,12 +228,6 @@ export const RegisterScreen = () => {
                 onPress={handleSubmit}>
                 <Text style={styles.registerButtonText}>Sign up</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('LoginScreen')}>
-                <Text style={styles.loginLinkText}>
-                  Already have an account
-                </Text>
-              </TouchableOpacity>
             </View>
           )}
         </Formik>
@@ -241,17 +245,20 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 16,
-    paddingLeft: 10,
+    height: 44,
+    backgroundColor: '#f1f5f9',
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#222',
   },
   registerButton: {
     backgroundColor: '#3498db',
     padding: 10,
     alignItems: 'center',
     borderRadius: 5,
+    marginTop: 10,
   },
   registerButtonText: {
     color: '#fff',
@@ -266,5 +273,11 @@ const styles = StyleSheet.create({
     color: '#3498db',
     margin: 10,
     textAlign: 'center',
+  },
+  label: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#222',
+    marginBottom: 8,
   },
 });

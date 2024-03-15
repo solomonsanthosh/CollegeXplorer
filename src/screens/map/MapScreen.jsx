@@ -5,7 +5,7 @@ import MapView from 'react-native-maps';
 export const MapScreen = () => {
     return (
         <View style={styles.container}>
-            <Text>MapScreen</Text>
+            <Text style={{color : "#1e1e1e"}}>MapScreen</Text>
             <MapView
                 style={styles.map}
                 initialPosition={{

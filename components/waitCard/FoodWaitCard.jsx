@@ -1,12 +1,14 @@
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 
 export const FoodWaitCard = ({order}) => {
   const navigation = useNavigation();
+  const [processing, setProcessing] = useState(false);
 
   const acceptDish = () => {
+    setProcessing(true);
     axios
       .post(`http://192.168.1.8:8080/api/order/update/${order._id}`, {
         user: order.user._id,
@@ -15,10 +17,19 @@ export const FoodWaitCard = ({order}) => {
       })
       .then(res => {
         Alert.alert('Order Accepted');
+        // Optionally, you can navigate to a different screen after accepting the order
+        // navigation.navigate('AcceptedOrders');
+      })
+      .catch(error => {
+        Alert.alert('Error', 'Failed to accept order. Please try again later.');
+      })
+      .finally(() => {
+        setProcessing(false);
       });
   };
 
   const declineDish = () => {
+    setProcessing(true);
     axios
       .post(`http://192.168.1.8:8080/api/order/update/${order._id}`, {
         user: order.user._id,
@@ -27,6 +38,15 @@ export const FoodWaitCard = ({order}) => {
       })
       .then(res => {
         Alert.alert('Order Rejected');
+      })
+      .catch(error => {
+        Alert.alert(
+          'Error',
+          'Failed to decline order. Please try again later.',
+        );
+      })
+      .finally(() => {
+        setProcessing(false);
       });
   };
 
@@ -43,15 +63,20 @@ export const FoodWaitCard = ({order}) => {
                 </Text>
               </View>
             ))}
+          <Text style={{color: '#1e1e1e'}}>
+            {order.isOrderComplete ? 'Order Completed' : 'Order Pending'}
+          </Text>
           <View style={styles.iconContainer}>
             <TouchableOpacity
               style={[styles.icon, {backgroundColor: '#68BA6A'}]}
-              onPress={() => acceptDish()}>
+              onPress={acceptDish}
+              disabled={processing}>
               <Text style={[styles.iconText, {color: '#fff'}]}>Accept</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.icon, {backgroundColor: '#E74C3C'}]}
-              onPress={() => declineDish()}>
+              onPress={declineDish}
+              disabled={processing}>
               <Text style={[styles.iconText, {color: '#fff'}]}>Decline</Text>
             </TouchableOpacity>
           </View>

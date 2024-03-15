@@ -1,17 +1,18 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import {Formik} from 'formik';
-import React, {useEffect, useState} from 'react';
+import { Formik } from 'formik';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  TouchableWithoutFeedback,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
-import {loginRedux} from '../../../redux/action';
+import { loginRedux } from '../../../redux/action';
 
 const validationSchema = yup.object().shape({
   emailLogin: yup.string().required('Email is required'),
@@ -20,53 +21,94 @@ const validationSchema = yup.object().shape({
 
 export const LoginScreen = () => {
   const navigation = useNavigation();
-
   const dispatch = useDispatch();
-
-  const [shopData, setShopData] = useState({});
-
   const user = useSelector(state => state.user);
-
-  const handleLogin = async values => {
-    try {
-      if (values.emailLogin === '') {
-        alert('Email is required');
-        return;
-      }
-      if (values.passwordLogin === '') {
-        alert('Password is required');
-        return;
-      }
-      await axios
-        .post(`http://192.168.1.8:8080/api/adminuser/login`, {
-          emailLogin: values.emailLogin,
-          passwordLogin: values.passwordLogin,
-        })
-        .then(response => {
-          setShopData(response.data);
-          if (response.data.shopType == 'food') {
-            navigation.navigate('ShowFoodScreen');
-          } else if (response.data.shopType == 'stationery') {
-            navigation.navigate('ShowStationeryScreen');
-          }
-          dispatch(loginRedux(response.data));
-        });
-    } catch (e) {
-      console.log('Error', e);
-    }
-  };
+  const [loginType, setLoginType] = useState(false);
 
   useEffect(() => {
-    if (user && user.shopType === 'food') {
-      navigation.navigate('ShowFoodScreen');
-    } else if (user && user.shopType === 'stationery') {
-      navigation.navigate('ShowStationeryScreen');
+    if (user) {
+      handleUserRedirect(user);
     }
   }, [user]);
 
+  const handleUserRedirect = (user) => {
+    if (user.shopType === 'food') {
+      navigation.navigate('FoodBottomNav');
+    } else if (user.shopType === 'stationery') {
+      navigation.navigate('StationeryBottomNav');
+    } else if (user.type === 'admin') {
+      navigation.navigate('AdminDashboard');
+    }
+  };
+
+  const handleAdminLogin = async values => {
+    try {
+      if (!values.emailLogin || !values.passwordLogin) {
+        alert('Email and password are required');
+        return;
+      }
+
+      const response = await axios.post(`http://192.168.1.8:8080/api/adminuser/login`, {
+        emailLogin: values.emailLogin,
+        passwordLogin: values.passwordLogin,
+      });
+
+      console.log(response.data, 'response');
+      dispatch(loginRedux(response.data));
+      handleUserRedirect(response.data);
+    } catch (error) {
+      console.log('Error', error);
+      alert('Failed to login. Please try again later.');
+    }
+  };
+
+  const handleTeacherLogin = async values => {
+    try {
+      if (!values.emailLogin || !values.passwordLogin) {
+        alert('Email and password are required');
+        return;
+      }
+
+      const response = await axios.post(`http://192.168.1.8:8080/api/teacher/login`, {
+        emailLogin: values.emailLogin,
+        passwordLogin: values.passwordLogin,
+      });
+
+      console.log(response.data, 'response');
+      navigation.navigate("TeacherBottomNav")
+      dispatch(loginRedux(response.data));
+      handleUserRedirect(response.data);
+    } catch (error) {
+      console.log('Error', error);
+      alert('Failed to login. Please try again later.');
+    }
+  };
+
+  const tabs = [{ name: 'Admin Login' }, { name: 'Teacher Login' }];
+
   return (
     <>
-      {user && user.shopType == 'food' && navigation.navigate('ShowFoodScreen')}
+      <View style={styles.containerTop}>
+        {tabs.map((item, index) => {
+          const isActive = index === loginType ? 'active' : '';
+          return (
+            <TouchableWithoutFeedback
+              key={item.name}
+              onPress={() => setLoginType(index)}>
+              <View
+                style={[
+                  styles.itemTop,
+                  isActive && { borderColor: '#6366f1' },
+                ]}>
+                <Text
+                  style={[styles.textTop, isActive && { color: '#6366f1' }]}>
+                  {item.name}
+                </Text>
+              </View>
+            </TouchableWithoutFeedback>
+          );
+        })}
+      </View>
       <View style={styles.container}>
         <Formik
           initialValues={{
@@ -74,14 +116,13 @@ export const LoginScreen = () => {
             passwordLogin: '',
           }}
           validationSchema={validationSchema}
-          onSubmit={handleLogin}>
+          onSubmit={loginType ? handleTeacherLogin : handleAdminLogin}>
           {({
             handleChange,
             handleSubmit,
             values,
             errors,
             touched,
-            setFieldValue,
           }) => (
             <View style={styles.formContainer}>
               <Text
@@ -90,8 +131,9 @@ export const LoginScreen = () => {
                   fontWeight: 'bold',
                   marginBottom: 16,
                   textAlign: 'center',
+                  color: "#1e1e1e"
                 }}>
-                Login
+                {loginType ? 'Teacher Login' : 'Admin Login'}
               </Text>
 
               <View>
@@ -114,23 +156,17 @@ export const LoginScreen = () => {
                   value={values.passwordLogin}
                   onChangeText={handleChange('passwordLogin')}
                   placeholder="Enter Password"
+                  secureTextEntry
                 />
                 {touched.passwordLogin && errors.passwordLogin && (
                   <Text style={styles.errorText}>{errors.passwordLogin}</Text>
                 )}
               </View>
 
-              {/* <TouchableOpacity onPress={handleForgotPassword}>
-              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-            </TouchableOpacity> */}
               <TouchableOpacity
                 style={styles.loginButton}
                 onPress={handleSubmit}>
                 <Text style={styles.loginButtonText}>Login</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('RegisterScreen')}>
-                <Text style={styles.registerLinkText}>Create an account</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -141,10 +177,33 @@ export const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  containerTop: {
+    width : "100%",
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    paddingVertical: 24,
+    paddingHorizontal: 12,
+  },
+  itemTop: {
+    width : "50%",
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderColor: '#e5e7eb',
+    borderBottomWidth: 2,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  textTop: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#6b7280',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 20,
     backgroundColor: '#fff',
   },
   formContainer: {
@@ -156,6 +215,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 16,
     paddingLeft: 10,
+    color : "#1e1e1e",
   },
   loginButton: {
     backgroundColor: '#3498db',
@@ -167,14 +227,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
-  forgotPasswordText: {
-    color: '#3498db',
-    marginBottom: 10,
-    textAlign: 'right',
+  errorText: {
+    color: 'red',
+    marginBottom: 5,
   },
-  registerLinkText: {
-    color: '#3498db',
-    margin: 10,
-    textAlign: 'center',
+  label: {
+    marginBottom: 5,
+    color : "#1e1e1e"
   },
 });
