@@ -1,92 +1,107 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, Text, Button, Alert} from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {Button as PaperButton} from 'react-native-paper';
-import axios from 'axios';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, View, Button, Text, Alert} from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
+import {firebaseConfig} from '../../firebaseConfig'; // Make sure to import your Firebase config file
+import {initializeApp} from 'firebase/app';
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from 'firebase/storage';
+import {useSelector} from 'react-redux';
+import axios from 'axios';
 
 const AddNotesTeacher = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [notesDetails, setNotesDetails] = useState({
-    teacherId: '60f3b3e3e6e4a5f8e4f3e3e3',
-    title: 'title',
-    className: 'IT',
-    notes: '',
-  });
+  const [selectedDocument, setSelectedDocument] = useState({});
 
-  const handleFilePicker = async () => {
+  useEffect(() => {
+    // Initialize Firebase app
+    const firebaseApp = initializeApp(firebaseConfig);
+  }, []);
+
+  const user = useSelector(state => state.user);
+
+  const createNotes = async (title, downloadLink) => {
+    try {
+      axios
+        .post(`http://192.168.1.8:8080/api/notes/teacher/create`, {
+          teacherId: user._id,
+          title: title,
+          className: user.className,
+          notes: downloadLink,
+        })
+        .then(res => {
+          Alert.alert('Success', 'Notes created successfully');
+        });
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Error', 'Failed to create notes');
+    }
+  };
+
+  const handleDocumentPick = async () => {
     try {
       const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.pdf], // Allow PDF files only
+        type: [DocumentPicker.types.pdf], // Allow only PDF files
       });
-
-      setSelectedFile(res);
+      handleUpload(res[0]);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         // User cancelled the picker, do nothing
+        console.log('User cancelled the picker');
       } else {
-        Alert.alert('Error', 'Failed to pick file');
+        Alert.alert('Error', 'Failed to pick document');
       }
     }
   };
 
-  const uploadToCloudinary = async () => {
+  const handleUpload = async res => {
+    if (!selectedDocument) {
+      Alert.alert('Error', 'Please select a document');
+      return;
+    }
+    console.log('Selected document:', res.name);
+
     try {
-      const formData = new FormData();
-      formData.append('file', {
-        uri: selectedFile.uri,
-        type: selectedFile.type,
-        name: selectedFile.fileName,
-      });
-      formData.append('upload_preset', 'uzh1fvzq');
-      formData.append('cloud_name', 'ds2mjvnjy');
+      console.log('Uploading document:', res.name);
+      const storageRef = ref(getStorage(), `documents/${res.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, res.uri);
 
-      const response = await axios.post(
-        'https://api.cloudinary.com/v1_1/ds2mjvnjy/upload',
-        formData,
+      uploadTask.on(
+        'state_changed',
+        snapshot => {
+          // Track upload progress if needed
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+        },
+        error => {
+          // Handle unsuccessful uploads
+          console.error('Upload error:', error);
+          Alert.alert('Error', 'Failed to upload document');
+        },
+        async () => {
+          // Handle successful uploads on complete
+          console.log('Document uploaded successfully');
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          createNotes(res.name, downloadURL);
+          console.log('Download URL:', downloadURL);
+        },
       );
-
-      if (response.data.secure_url) {
-        // File uploaded successfully
-        console.log('Uploaded URL:', response.data.secure_url);
-      } else {
-        throw new Error('Failed to upload file to Cloudinary');
-      }
     } catch (error) {
-      console.error('Error uploading file:', error);
-      Alert.alert('Error', 'Failed to upload file to Cloudinary');
+      console.error('Upload error:', error);
+      Alert.alert('Error', 'Failed to upload document');
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.inputLabel, {textAlign: 'center'}]}>
-        Add Food Product
-      </Text>
-      <View style={styles.input}>
-        <Text style={styles.inputLabel}>Food Description</Text>
-        <TextInput
-          onChangeText={handleChange('productDescription')}
-          placeholder="Enter Dish description"
-          placeholderTextColor="#6b7280"
-          style={styles.inputControl}
-          value={values.productDescription}
-        />
-        {touched.productDescription && errors.productDescription && (
-          <Text style={styles.errorText}>{errors.productDescription}</Text>
-        )}
-      </View>
-      <Button title="Select File" onPress={handleFilePicker} />
-      {selectedFile && (
-        <Text style={styles.selectedFileName}>{selectedFile.fileName}</Text>
+      <Text style={styles.label}>Upload Document :</Text>
+      {selectedDocument && (
+        <Text style={{color: '#1e1e1e'}}>{selectedDocument.name}</Text>
       )}
-      <PaperButton
-        mode="contained"
-        onPress={uploadToCloudinary}
-        disabled={!selectedFile}
-        style={styles.uploadButton}>
-        Upload
-      </PaperButton>
+      <Button title="Pick Document" onPress={handleDocumentPick} />
     </View>
   );
 };
@@ -94,40 +109,14 @@ const AddNotesTeacher = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
-  inputLabel: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#222',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  selectedFileName: {
-    fontSize: 16,
-    marginVertical: 8,
-  },
-  uploadButton: {
-    marginTop: 16,
-  },
-  input: {
-    marginBottom: 16,
-  },
-  inputLabel: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#222',
-    marginBottom: 8,
-  },
-  inputControl: {
-    height: 44,
-    backgroundColor: '#f1f5f9',
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#222',
+  label: {
+    fontSize: 18,
+    marginBottom: 10,
+    color: '#1e1e1e',
   },
 });
 
