@@ -1,5 +1,5 @@
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 
@@ -8,23 +8,34 @@ export const StationeryWaitCard = ({order}) => {
 
   const acceptStationery = () => {
     axios
-      .post(`http://192.168.1.8:8080/api/order/update/${order._id}`, {
-        user: order.user._id,
-        items: order.items,
-        status: 'accepted',
-      })
+      .post(
+        `https://busy-ruby-snail-boot.cyclic.app/api/order/update/${order._id}`,
+        {
+          user: order.user._id,
+          items: order.items,
+          status: 'accepted',
+        },
+      )
       .then(res => {
+        console.log(res.data);
         Alert.alert('Order Accepted');
       });
   };
 
+  useEffect(() => {
+    console.log(order.items, 'order.items');
+  }, []);
+
   const declineStationery = () => {
     axios
-      .post(`http://192.168.1.8:8080/api/order/update/${order._id}`, {
-        user: order.user._id,
-        items: order.items,
-        status: 'declined',
-      })
+      .post(
+        `https://busy-ruby-snail-boot.cyclic.app/api/order/update/${order._id}`,
+        {
+          user: order.user._id,
+          items: order.items,
+          status: 'declined',
+        },
+      )
       .then(res => {
         Alert.alert('Order Rejected');
       });

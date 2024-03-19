@@ -33,7 +33,7 @@ export default function TeacherProfile() {
   const editProfileFunction = () => {
     try {
       axios
-        .put(`http://192.168.1.8:8080/api/teacher/update/${user._id}`, form)
+        .put(`https://busy-ruby-snail-boot.cyclic.app/api/teacher/update/${user._id}`, form)
         .then(response => {
           sheet.current.close();
           setUserDetails(response.data);

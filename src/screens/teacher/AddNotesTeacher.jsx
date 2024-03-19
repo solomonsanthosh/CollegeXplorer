@@ -25,7 +25,7 @@ const AddNotesTeacher = () => {
   const createNotes = async (title, downloadLink) => {
     try {
       axios
-        .post(`http://192.168.1.8:8080/api/notes/teacher/create`, {
+        .post(`https://busy-ruby-snail-boot.cyclic.app/api/notes/teacher/create`, {
           teacherId: user._id,
           title: title,
           className: user.className,

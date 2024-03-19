@@ -31,7 +31,7 @@ export const EditFoodScreen = ({route}) => {
     console.log(productData._id);
     try {
       await axios
-        .put(`http://192.168.1.8:8080/api/product/update/${productData._id}`, values)
+        .put(`https://busy-ruby-snail-boot.cyclic.app/api/product/update/${productData._id}`, values)
         .then(res => {
           Alert.alert('Success', 'Product Updated Successfully', [
             {

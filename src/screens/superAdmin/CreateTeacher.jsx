@@ -38,7 +38,7 @@ export const CreateTeacher = () => {
     }
     try {
       axios
-        .post(`http://192.168.1.8:8080/api/teacher/insert`, values)
+        .post(`https://busy-ruby-snail-boot.cyclic.app/api/teacher/insert`, values)
         .then(() => {
           Alert.alert('Success', 'Teacher Created Successfully', [
             {

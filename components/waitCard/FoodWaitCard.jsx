@@ -10,17 +10,17 @@ export const FoodWaitCard = ({order}) => {
   const acceptDish = () => {
     setProcessing(true);
     axios
-      .post(`http://192.168.1.8:8080/api/order/update/${order._id}`, {
+      .post(`https://busy-ruby-snail-boot.cyclic.app/api/order/update/${order._id}`, {
         user: order.user._id,
         items: order.items,
         status: 'accepted',
       })
       .then(res => {
+        console.log(res.data);
         Alert.alert('Order Accepted');
-        // Optionally, you can navigate to a different screen after accepting the order
-        // navigation.navigate('AcceptedOrders');
       })
       .catch(error => {
+        console.log(error);
         Alert.alert('Error', 'Failed to accept order. Please try again later.');
       })
       .finally(() => {
@@ -31,7 +31,7 @@ export const FoodWaitCard = ({order}) => {
   const declineDish = () => {
     setProcessing(true);
     axios
-      .post(`http://192.168.1.8:8080/api/order/update/${order._id}`, {
+      .post(`https://busy-ruby-snail-boot.cyclic.app/api/order/update/${order._id}`, {
         user: order.user._id,
         items: order.items,
         status: 'declined',

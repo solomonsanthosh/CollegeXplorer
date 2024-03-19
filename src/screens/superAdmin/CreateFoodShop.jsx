@@ -28,7 +28,7 @@ export const CreateFoodShop = () => {
   const navigation = useNavigation();
 
   const handleRegister = values => {
-    axios.post(`http://192.168.1.8:8080/api/adminuser/create`, values, () => {
+    axios.post(`https://busy-ruby-snail-boot.cyclic.app/api/adminuser/create`, values, () => {
       alert('Admin User Created Successfully');
       navigation.navigate('AdminDashboard');
     });

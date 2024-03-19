@@ -11,7 +11,7 @@ import {
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 
 const validationSchema = yup.object().shape({
@@ -25,11 +25,19 @@ export const AddFoodScreen = () => {
   const navigation = useNavigation();
   const user = useSelector(state => state.user);
 
+  const route = useRoute();
+  const {setProducts} = route.params;
+
   const handleAddProduct = async values => {
     try {
       await axios
-        .post(`http://192.168.1.8:8080/api/product/insert`, values)
+        .post(
+          `https://busy-ruby-snail-boot.cyclic.app/api/product/insert`,
+          values,
+        )
         .then(res => {
+          const newProduct = res.data;
+          setProducts(prevProducts => [newProduct, ...prevProducts]);
           Alert.alert('Success', 'Product Added Successfully', [
             {
               text: 'OK',

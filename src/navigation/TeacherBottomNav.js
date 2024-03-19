@@ -11,9 +11,9 @@ const TeacherBottomNav = () => {
 
   return (
     <Tab.Navigator tabBar={props => <AdminBottomNav {...props} />}>
-      <Tab.Screen name="Notes" component={TeacherNotes} />
       <Tab.Screen name="Class" component={TeacherClass} />
       <Tab.Screen name="Teacher" component={TeacherSearch} />
+      <Tab.Screen name="Notes" component={TeacherNotes} />
       <Tab.Screen name="Profile" component={TeacherProfile} />
     </Tab.Navigator>
   );

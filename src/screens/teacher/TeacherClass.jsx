@@ -11,7 +11,7 @@ const TeacherClass = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://192.168.1.8:8080/api/teacher/students/${user._id}`);
+        const response = await axios.get(`https://busy-ruby-snail-boot.cyclic.app/api/teacher/students/${user._id}`);
         setStudents(response.data);
       } catch (error) {
         console.log(error);

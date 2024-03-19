@@ -1,16 +1,46 @@
-import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Text, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const TeacherNotes = () => {
   const user = useSelector(state => state.user);
 
   const [notes, setNotes] = useState([]);
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+
+  const deleteButton = id => {
+    Alert.alert(
+      'Delete Food',
+      'Are you sure you want to delete this note?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => deleteNote(id),
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const deleteNote = async notesId => {
+    try {
+      axios.delete(`https://busy-ruby-snail-boot.cyclic.app/api/notes/teacher/${notesId}`);
+      console.log('Note deleted', notesId);
+      const updatedNotes = notes.filter(note => note._id !== notesId);
+      setNotes(updatedNotes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     // if (!user) {
@@ -18,7 +48,9 @@ const TeacherNotes = () => {
     // }
     try {
       axios
-        .get(`http://192.168.1.8:8080/api/notes/teacher/${user._id}`)
+        .get(
+          `https://busy-ruby-snail-boot.cyclic.app/api/notes/teacher/${user._id}`,
+        )
         .then(res => {
           setNotes(res.data);
         });
@@ -44,7 +76,7 @@ const TeacherNotes = () => {
             <View style={styles.cardAction}>
               <TouchableOpacity
                 onPress={() => {
-                  // handle onPress
+                  deleteButton(note._id);
                 }}>
                 <FeatherIcon color="#6A6D70" name="more-vertical" size={20} />
               </TouchableOpacity>

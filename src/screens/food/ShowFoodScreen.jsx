@@ -43,7 +43,7 @@ export const ShowFoodScreen = () => {
 
   const deleteFood = async id => {
     try {
-      await axios.delete(`http://192.168.1.8:8080/api/product/delete/${id}`);
+      await axios.delete(`https://busy-ruby-snail-boot.cyclic.app/api/product/delete/${id}`);
       const updatedFoods = products.filter(product => product?._id !== id);
       setProducts(updatedFoods);
     } catch (error) {
@@ -54,7 +54,7 @@ export const ShowFoodScreen = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `http://192.168.1.8:8080/api/product/shop/${user?._id}`,
+        `https://busy-ruby-snail-boot.cyclic.app/api/product/shop/${user?._id}`,
       );
       setProducts(response.data);
     } catch (error) {
@@ -104,7 +104,7 @@ export const ShowFoodScreen = () => {
       </ScrollView>
       <TouchableOpacity
         style={styles.floatingButton}
-        onPress={() => navigation.navigate('AddFoodScreen')}>
+        onPress={() => navigation.navigate('AddFoodScreen', { setProducts })}>
         <Text style={styles.floatingButtonText}>+</Text>
       </TouchableOpacity>
 

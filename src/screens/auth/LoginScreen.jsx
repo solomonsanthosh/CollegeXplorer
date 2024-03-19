@@ -48,7 +48,7 @@ export const LoginScreen = () => {
         return;
       }
 
-      const response = await axios.post(`http://192.168.1.8:8080/api/adminuser/login`, {
+      const response = await axios.post(`https://busy-ruby-snail-boot.cyclic.app/api/adminuser/login`, {
         emailLogin: values.emailLogin,
         passwordLogin: values.passwordLogin,
       });
@@ -69,7 +69,7 @@ export const LoginScreen = () => {
         return;
       }
 
-      const response = await axios.post(`http://192.168.1.8:8080/api/teacher/login`, {
+      const response = await axios.post(`https://busy-ruby-snail-boot.cyclic.app/api/teacher/login`, {
         emailLogin: values.emailLogin,
         passwordLogin: values.passwordLogin,
       });

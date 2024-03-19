@@ -12,7 +12,7 @@ export const WaitFoodScreen = () => {
 
   useEffect(() => {
     if (user) {
-      axios.get(`http://192.168.1.8:8080/api/order/${user?._id}`)
+      axios.get(`https://busy-ruby-snail-boot.cyclic.app/api/order/${user?._id}`)
         .then(res => {
           setAllOrders(res.data);
           setLoading(false);

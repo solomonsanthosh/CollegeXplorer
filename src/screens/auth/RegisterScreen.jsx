@@ -31,7 +31,7 @@ export const RegisterScreen = () => {
     console.log('values', values);
     try {
       axios
-        .post(`http://192.168.1.8:8080/api/adminuser/create`, values)
+        .post(`https://busy-ruby-snail-boot.cyclic.app/api/adminuser/create`, values)
         .then(res => {
           console.log(res.data);
           alert('Admin User Created Successfully');

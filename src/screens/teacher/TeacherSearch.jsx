@@ -21,7 +21,7 @@ export default function TeacherSearch() {
     try {
       axios
         .get(
-          `http://192.168.1.8:8080/api/user/registerNumber/${registerNumber}`,
+          `https://busy-ruby-snail-boot.cyclic.app/api/user/registerNumber/${registerNumber}`,
         )
         .then(response => {
           console.log(response.data, 'response');
@@ -39,7 +39,7 @@ export default function TeacherSearch() {
   const updateClassForUser = async (id, className) => {
     try {
       axios
-        .put(`http://192.168.1.8:8080/api/user/update/classname/${id}`, {
+        .put(`https://busy-ruby-snail-boot.cyclic.app/api/user/update/classname/${id}`, {
           className: className,
         })
         .then(response => {
@@ -188,6 +188,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     fontSize: 16,
     fontWeight: '500',
+    color : "#000000",
     paddingLeft: 40,
     shadowColor: '#90a0ca',
     shadowOffset: {
