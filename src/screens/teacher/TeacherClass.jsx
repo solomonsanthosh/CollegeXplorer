@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Image } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, View, TouchableOpacity, Text, Image} from 'react-native';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 const TeacherClass = () => {
@@ -11,7 +11,9 @@ const TeacherClass = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://busy-ruby-snail-boot.cyclic.app/api/teacher/students/${user._id}`);
+        const response = await axios.get(
+          `https://busy-ruby-snail-boot.cyclic.app/api/teacher/students/${user._id}`,
+        );
         setStudents(response.data);
       } catch (error) {
         console.log(error);
@@ -23,8 +25,8 @@ const TeacherClass = () => {
   return (
     <View style={styles.container}>
       {students.length === 0 && (
-        <View style={{ alignItems: 'center', marginTop: 20 }}>
-          <Text style={{ color: "#1e1e1e" }}>No students found</Text>
+        <View style={{alignItems: 'center', marginTop: 20}}>
+          <Text style={{color: '#1e1e1e'}}>No students found</Text>
         </View>
       )}
       {students.map(student => (
@@ -47,14 +49,7 @@ const TeacherClass = () => {
               <Text style={styles.cardSubtitle}>{student.registerNumber}</Text>
               <Text style={styles.cardSubtitle}>{student.email}</Text>
             </View>
-            <View style={styles.cardAction}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}>
-                <FeatherIcon color="#6A6D70" name="more-vertical" size={20} />
-              </TouchableOpacity>
-            </View>
+            <View style={styles.cardAction}></View>
           </View>
         </TouchableOpacity>
       ))}
@@ -70,6 +65,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 10,
     borderRadius: 10,
+    marginBottom: 10,
   },
   card: {
     width: '100%',

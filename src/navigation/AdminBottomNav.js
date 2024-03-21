@@ -55,7 +55,8 @@ export const AdminBottomNav = ({state, descriptors, navigation}) => {
                 backgroundColor: isFocused ? '#673ab7' : '#fff',
                 width: '100%',
                 textAlign: 'center',
-                padding: 16,
+                paddingHorizontal: 8,
+                paddingVertical: 18,
               }}>
               {label}
             </Text>

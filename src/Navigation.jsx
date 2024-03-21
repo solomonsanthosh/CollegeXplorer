@@ -28,6 +28,7 @@ import TeacherProfile from './screens/teacher/TeacherProfile';
 import { WaitStationeryScreen } from './screens/stationery/WaitStationeryScreen';
 import TeacherNotes from './screens/teacher/TeacherNotes';
 import AddNotesTeacher from './screens/teacher/AddNotesTeacher';
+import TeacherAttendance from './screens/teacher/TeacherAttendance';
 
 const Stack = createNativeStackNavigator();
 
@@ -62,6 +63,7 @@ export default function Navigation() {
         <Stack.Screen name="TeacherProfile" component={TeacherProfile} />
         <Stack.Screen name="TeacherNotes" component={TeacherNotes} />
         <Stack.Screen name="AddNotesTeacher" component={AddNotesTeacher} />
+        <Stack.Screen name="TeacherAttendance" component={TeacherAttendance} />
 
         {/* Food Wait Screen */}
         <Stack.Screen name="WaitFoodScreen" component={WaitFoodScreen} />
